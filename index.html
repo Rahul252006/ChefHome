@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHEF HOME</title>
+<script src="main.js" defer type="module"></script>
+<style>
+    @font-face {
+        font-family: 'milker';
+        src: url('fonts/Milker.otf') format('opentype');
+    }
+    @font-face {
+        font-family: 'lexend';
+        src: url('fonts/Lexend-VariableFont_wght.ttf') format('truetype');
+    }
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'lexend', sans-serif;
+        background-color: #0E0E0E;
+        color: #F5F5F5;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg");
+        background-repeat: repeat;
+        background-size: auto;
+        z-index: -1;
+        opacity: 0.4;
+        filter: brightness(100%);
+    }
+
+    header {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        padding: 15px 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 40px;
+        background: rgba(30, 30, 30, 0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        box-shadow: 
+            inset 0 0 10px rgba(255,255,255,0.05),
+            0 8px 32px rgba(0,0,0,0.4),
+            0 0 1px rgba(255,255,255,0.1);
+        border: 1px solid rgba(214,196,140,0.15);
+        border-radius: 50px;
+        z-index: 100;
+        transition: all 0.5s ease-in-out;
+    }
+
+    header:hover {
+        background: rgba(40, 40, 40, 0.35);
+        box-shadow: 
+            inset 0 0 15px rgba(255,255,255,0.1),
+            0 12px 40px rgba(214,196,140,0.4),
+            0 0 2px rgba(255,255,255,0.15);
+    }
+
+    header h1 {
+        font-family: 'milker';
+        color: #D6C48C;
+        font-size: 28px;
+        margin: 0;
+    }
+
+    .si {
+        height: 40px;
+        width: 100px;
+        font-family: "milker";
+        border-radius: 30px;
+        background-color: #1A1A1A;
+        color: #D6C48C;
+        cursor: pointer;
+        border: 1px solid rgba(214,196,140,0.4);
+        transition: 0.3s ease;
+    }
+
+    .si a {
+        text-decoration: none;
+        color: #D6C48C;
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        line-height: 40px;
+    }
+
+    .si:hover {
+        background-color: #D6C48C;
+        color: #0E0E0E;
+    }
+    .si:hover a { color:#0E0E0E; }
+
+    section {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* Login Section Buttons */
+    .buttons {
+        display: flex;
+        gap: 40px;
+        flex-direction: row;
+    }
+    .s {
+        height: 100px;
+        width: 200px;
+        border-radius: 20px;
+        color: #F5F5F5;
+        cursor: pointer;
+        font-size: 18px;
+        transition: 0.3s ease-in-out;
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        box-shadow: 
+            inset 0 0 10px rgba(255,255,255,0.05),
+            0 8px 32px rgba(0,0,0,0.4),
+            0 0 1px rgba(255,255,255,0.1);
+        border: 1px solid rgba(214,196,140,0.15);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .s a {
+        color: inherit;
+        font-family: "lexend";
+        text-decoration: none;
+        width: 100%;
+        text-align: center;
+    }
+    .s:hover { background: rgba(214,196,140,0.2); transform: translateY(-5px); }
+
+    /* About Section Container */
+    #about .about-container {
+        max-width: 800px;
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        border-radius: 25px;
+        padding: 40px;
+        box-shadow: 
+            inset 0 0 10px rgba(255,255,255,0.05),
+            0 8px 32px rgba(0,0,0,0.4),
+            0 0 1px rgba(255,255,255,0.1);
+        border: 1px solid rgba(214,196,140,0.15);
+        line-height: 1.6;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+    #about .about-container.show { opacity:1; transform:translateY(0); }
+    #about h2, #contact h2 { font-family: 'milker'; color: #D6C48C; font-size: 36px; margin-bottom: 15px; }
+    #about p { color: #E8E8E8; font-size: 17px; margin-bottom:10px; }
+
+    /* Contact Section Container */
+    #contact .contact-card {
+        max-width: 700px;
+        background: rgba(30,30,30,0.5);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        border-radius: 25px;
+        box-shadow: 0 0 40px rgba(0,0,0,0.4);
+        padding: 40px;
+        text-align: center;
+        color: #E8E8E8;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+    }
+    #contact .contact-card.show { opacity:1; transform:translateY(0); }
+    .contact-card a { color: #D6C48C; text-decoration: none; transition: all 0.3s ease-in-out; }
+    .contact-card a:hover { color:#FFF; }
+    .socials { margin-top: 15px; font-size: 16px;}
+
+    footer {
+        text-align:center;
+        padding:20px;
+        color:#B0AFAF;
+        font-size:14px;
+    }
+
+    /* ================= RESPONSIVE MEDIA QUERIES ================= */
+
+    @media (max-width: 1024px) {
+        header {
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            padding: 12px 25px;
+            height: auto;
+        }
+        header h1 { font-size: 24px; }
+        .si { height: 35px; width: 90px; }
+        .si a { line-height: 35px; }
+        section.buttons { flex-direction: column; gap: 25px; }
+        .s { width: 80%; max-width: 250px; height: 80px; font-size: 16px; }
+        .s a { font-size: 16px; }
+    }
+
+    @media (max-width: 768px) {
+        header h1 { font-size: 22px; }
+        .si { height: 32px; width: 85px; }
+        .si a { line-height: 32px; font-size: 14px; }
+        .s { width: 90%; height: 70px; font-size: 15px; }
+        .about-container, .contact-card { padding: 25px 20px; border-radius: 20px; }
+        #about h2, #contact h2 { font-size: 28px; }
+        #about p, #contact p { font-size: 15px; }
+    }
+
+    @media (max-width: 480px) {
+        header { top: 10px; left: 10px; right: 10px; padding: 10px 15px; }
+        header h1 { font-size: 20px; }
+        .si { height: 28px; width: 75px; }
+        .si a { line-height: 28px; font-size: 13px; }
+        section.buttons { gap: 15px; align-items: center; }
+        .s { width: 95%; height: 60px; font-size: 14px; }
+        .s a { font-size: 14px; }
+        #about .about-container, #contact .contact-card { padding: 20px 15px; border-radius: 15px; }
+        #about h2, #contact h2 { font-size: 24px; }
+        #about p, #contact p { font-size: 14px; }
+        .socials { font-size: 14px; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>CHEF HOME</h1>
+    <button class="si"><a href="signin.html">Sign In</a></button>
+</header>
+
+<main>
+    <!-- LOGIN SECTION -->
+    <section class="buttons">
+        <button class="s"><a href="signin.html">Customer Login</a></button>
+        <button class="s"><a href="cheflogin.html">Chef Login</a></button>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <div class="about-container">
+            <h2>About Us</h2>
+            <p><strong>ChefHome</strong> connects you with skilled home chefs who bring the joy of freshly cooked meals right to your home.</p>
+            <p>Whether it’s a family dinner, a celebration, or you just need a break from cooking — we've got you covered.</p>
+            <p><strong>Our Mission:</strong> To make personalized, hygienic, and professional dining experiences accessible and affordable for everyone.</p>
+            <p>Choose your chef, select your menu, and enjoy a restaurant-style experience without stepping outside.</p>
+            <p>With ChefHome, every meal is made with love and crafted just for you. 🍽️✨</p>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <div class="contact-card">
+            <h2>Contact Us</h2>
+            <p>Email: <a href="mailto:support@chefhome.com">support@chefhome.com</a></p>
+            <p>Phone: +91 98765 43210</p>
+            <p>Follow us on social media:</p>
+            <div class="socials">
+                <a href="#" target="_blank">Instagram</a> | 
+                <a href="#" target="_blank">Facebook</a> | 
+                <a href="#" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    © 2025 CHEF HOME. All rights reserved.
+</footer>
+
+<script>
+    // About & Contact fade-in
+    const about = document.querySelector('.about-container');
+    const contact = document.querySelector('.contact-card');
+
+    const revealOnScroll = (el) => {
+        const rect = el.getBoundingClientRect();
+        if(rect.top < window.innerHeight - 100){
+            el.classList.add('show');
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        revealOnScroll(about);
+        revealOnScroll(contact);
+    });
+
+    revealOnScroll(about);
+    revealOnScroll(contact);
+</script>
+
+</body>
+</html>

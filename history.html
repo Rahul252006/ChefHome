@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order History - CHEF HOME</title>
+
+<style>
+    @font-face {
+        font-family: 'milker';
+        src: url('fonts/Milker.otf') format('opentype');
+    }
+    @font-face {
+        font-family: 'lexend';
+        src: url('fonts/Lexend-VariableFont_wght.ttf') format('truetype');
+    }
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "lexend", sans-serif;
+        background-color: #0E0E0E;
+        color: #F5F5F5;
+    }
+
+    body::before {
+        content: "";
+        position: fixed; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg"); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.2; 
+        filter: brightness(75%); 
+        z-index: -1;
+        pointer-events: none;
+    }
+    header {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        padding: 15px 35px;
+        display: flex;
+        font-family: "milker";
+        color: #D6C48C;
+        justify-content: space-between;
+        align-items: center;
+
+        background: rgba(30, 30, 30, 0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        
+        box-shadow: 
+            inset 0 0 10px rgba(255, 255, 255, 0.05),
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            0 0 1px rgba(255, 255, 255, 0.1);
+        
+        border: 1px solid rgba(214, 196, 140, 0.15);
+        border-radius: 50px;
+        
+        z-index: 100;
+        transition: all 0.3s ease-in-out;
+        margin-bottom: 50px;
+        padding-top: 20px;
+        font-size: 25px;
+    }
+    header:hover {
+        background: rgba(40, 40, 40, 0.35);
+        box-shadow: 
+            inset 0 0 15px rgba(255, 255, 255, 0.1),
+            0 12px 40px rgba(214, 196, 140, 0.5),
+            0 0 2px rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(214, 196, 140, 0.25);
+    }
+    .container {
+        max-width: 1420px;
+        margin: 40px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        margin-top: 100px;
+    }
+
+    /* ✅ Order card animation */
+    @keyframes slideFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .order-card {
+        background: rgba(255, 255, 255, 0.049);
+        backdrop-filter: blur(25px) saturate(180%);
+        border-radius: 25px;
+        padding: 20px 30px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        /* animation default */
+        opacity: 0;
+        animation: slideFadeIn 0.6s forwards;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        color: #D6C48C;
+        font-size: 16px;
+    }
+
+    .order-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #F5F5F5;
+    }
+
+    .order-row.total {
+        font-weight: 700;
+        font-size: 16px;
+        color: #D6C48C;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 8px;
+        margin-top: 6px;
+    }
+
+    .payment-method {
+        font-size: 14px;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .back-home {
+        margin-top: 400px;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .back-home a {
+        padding: 12px 30px;
+        border-radius: 20px;
+        background: rgba(0,0,0,0.3);
+        color: #D6C48C;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        box-shadow: 0 5px 25px rgba(73, 58, 12, 0.3);
+        transition: all 0.3s ease-in-out;
+        border: 2px solid #D6C48C;
+    }
+
+    .back-home a:hover {
+        background: rgba(0,0,0,0.25);
+        box-shadow: 0 10px 35px rgba(122, 116, 0, 0.4);
+    }
+    @media (max-width: 600px) {
+        .container{
+            max-width: 90%;
+            margin-top: 100px;
+        }
+        header{
+            font-size: 15px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>CHEF HOME - Order History</header>
+
+<div class="container" id="ordersContainer">
+    <!-- Orders will be populated here -->
+</div>
+
+<div class="back-home">
+    <a href="book.html">Back to Home</a>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const container = document.getElementById('ordersContainer');
+
+    if (orders.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:#A0A0A0;">No orders yet.</p>';
+        return;
+    }
+
+    orders.forEach((order, index) => {
+        const card = document.createElement('div');
+        card.className = 'order-card';
+        card.style.animationDelay = `${index * 0.15}s`;
+
+        const header = document.createElement('div');
+        header.className = 'order-header';
+        header.innerHTML = `<span>Order #${index + 1}</span><span>${order.date}</span>`;
+
+        const chefFeeRow = document.createElement('div');
+        chefFeeRow.className = 'order-row';
+        chefFeeRow.innerHTML = `<span>Chef Fee:</span><span>₹${order.chefFee}</span>`;
+
+        const itemsTotalRow = document.createElement('div');
+        itemsTotalRow.className = 'order-row';
+        itemsTotalRow.innerHTML = `<span>Items Total:</span><span>₹${order.itemsTotal}</span>`;
+
+        const totalRow = document.createElement('div');
+        totalRow.className = 'order-row total';
+        totalRow.innerHTML = `<span>Total:</span><span>₹${order.finalTotal}</span>`;
+
+        // Payment Method container as flex
+        const paymentMethod = document.createElement('div');
+        paymentMethod.className = 'payment-method';
+        paymentMethod.style.display = 'flex';
+        paymentMethod.style.justifyContent = 'space-between';
+        paymentMethod.style.alignItems = 'center';
+
+        const paymentText = document.createElement('span');
+        paymentText.textContent = `Payment Method: ${order.paymentMethod}`;
+
+        // Cancel Button inside payment row
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = 'Cancel Order';
+        cancelBtn.style.padding = '6px 18px';
+        cancelBtn.style.borderRadius = '20px';
+        cancelBtn.style.border = '1px solid rgba(255,0,0,0.5)';
+        cancelBtn.style.background = 'rgba(255,0,0,0.15)';
+        cancelBtn.style.color = 'red';
+        cancelBtn.style.fontWeight = '600';
+        cancelBtn.style.fontSize = '13px';
+        cancelBtn.style.cursor = 'pointer';
+        cancelBtn.style.transition = 'all 0.3s ease-in-out';
+        cancelBtn.onmouseover = () => { cancelBtn.style.background = 'rgba(255,0,0,0.25)'; };
+        cancelBtn.onmouseout = () => { cancelBtn.style.background = 'rgba(255,0,0,0.15)'; };
+
+        // Cancel logic - works for any future date/time
+        cancelBtn.addEventListener('click', () => {
+            let orderDateTime;
+
+            // Parse order.date (assume format "YYYY-MM-DD" or "Tomorrow", "Day after tomorrow")
+            const now = new Date();
+            orderDateTime = new Date(); // start with today
+            orderDateTime.setHours(0, 0, 0, 0); // reset time
+
+            const dateLower = order.date.toLowerCase();
+            if (dateLower === 'tomorrow') {
+                orderDateTime.setDate(now.getDate() + 1);
+            } else if (dateLower === 'day after tomorrow') {
+                orderDateTime.setDate(now.getDate() + 2);
+            } else {
+                // If it's a normal date string "YYYY-MM-DD"
+                orderDateTime = new Date(order.date);
+            }
+
+            // Set time from timeSlot ("HH:MM" 24-hour)
+            if (order.timeSlot) {
+                const [hours, minutes] = order.timeSlot.split(':').map(Number);
+                orderDateTime.setHours(hours, minutes, 0, 0);
+            } else {
+                // If no timeSlot, assume start of day
+                orderDateTime.setHours(0, 0, 0, 0);
+            }
+
+            if (now < orderDateTime) {
+                if (confirm('Are you sure you want to cancel this order?')) {
+                    orders.splice(index, 1);
+                    localStorage.setItem('orders', JSON.stringify(orders));
+                    container.removeChild(card);
+                }
+            } else {
+                alert('This order cannot be cancelled as the time has already passed.');
+            }
+        });
+
+        paymentMethod.appendChild(paymentText);
+        paymentMethod.appendChild(cancelBtn);
+
+        // Append all rows to card
+        card.appendChild(header);
+        card.appendChild(chefFeeRow);
+        card.appendChild(itemsTotalRow);
+        card.appendChild(totalRow);
+        card.appendChild(paymentMethod);
+
+        container.appendChild(card);
+    });
+});
+</script>
+
+
+
+</body>
+</html>

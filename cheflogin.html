@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chef Login - ChefHome</title>
+<style>
+    @font-face {
+        font-family: 'milker';
+        src: url('fonts/Milker.otf') format('opentype');
+    }
+    @font-face {
+        font-family: 'lexend';
+        src: url('fonts/Lexend.ttf') format('truetype');
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'milker', sans-serif;
+    }
+
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+    }
+
+    .login-container {
+        width: 350px;
+        padding: 40px 30px;
+        background: rgba(30, 30, 30, 0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        border-radius: 30px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        color: #fff;
+    }
+
+    .login-container h2 {
+        text-align: center;
+        font-family: 'lexend', sans-serif;
+        font-size: 26px;
+        margin-bottom: 10px;
+        color: #fff;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-group label {
+        font-size: 14px;
+        color: #e0e0e0;
+    }
+
+    .input-group input {
+        padding: 12px 15px;
+        border-radius: 12px;
+        border: none;
+        outline: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 14px;
+        transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .input-group input::placeholder {
+        color: #ccc;
+    }
+
+    .input-group input:focus {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+    }
+
+    .login-btn {
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #6c63ff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .login-btn:hover {
+        background: #574fd6;
+        box-shadow: 0 4px 15px rgba(108, 99, 255, 0.5);
+    }
+
+    .google-btn {
+        background: #fff;
+        color: #333;
+        font-size: 15px;
+        font-family: 'lexend', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 12px;
+        padding: 10px;
+        cursor: pointer;
+        border: none;
+        transition: 0.3s;
+    }
+
+    .google-btn:hover {
+        background: #e0e0e0;
+    }
+
+    .google-btn img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .forgot-password {
+        text-align: center;
+    }
+
+    .forgot-password a {
+        color: #6c63ff;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 400px) {
+        .login-container {
+            width: 90%;
+            padding: 30px 20px;
+        }
+    }
+</style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Chef Login</h2>
+        <form id="chefLoginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="chef@example.com" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <button class="google-btn" id="google-l">
+            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google"> Sign in with Google
+        </button>
+
+        <div class="forgot-password">
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAuth , GoogleAuthProvider , signInWithPopup , signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDv-jV2uHrp8Xchmr3u540J6xmWK8PZEec",
+    authDomain: "login-c2893.firebaseapp.com",
+    projectId: "login-c2893",
+    storageBucket: "login-c2893.firebasestorage.app",
+    messagingSenderId: "848550093693",
+    appId: "1:848550093693:web:b1142db0e0aa38f8afe214",
+    measurementId: "G-KB4XZT429X"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  auth.languageCode = 'en';
+  const provider = new GoogleAuthProvider();
+
+  // Google login
+  const googleLogin = document.getElementById("google-l");
+  googleLogin.addEventListener("click", () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log("Google Login Success:", user);
+        localStorage.setItem("currentChef", JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          uid: user.uid
+        }));
+        window.location.href = "chefdashboard.html";
+      })
+      .catch((error) => {
+        console.error("Google Login Error:", error.message);
+        alert("Google Sign-In failed: " + error.message);
+      });
+  });
+
+  // Email-password login
+  const form = document.getElementById('chefLoginForm');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = form.email.value;
+    const password = form.password.value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("Email Login Success:", user);
+        localStorage.setItem("currentChef", JSON.stringify({
+          email: user.email,
+          uid: user.uid
+        }));
+        window.location.href = "chefdashboard.html";
+      })
+      .catch((error) => {
+        console.error("Login Error:", error.message);
+        alert("Invalid email or password: " + error.message);
+      });
+  });
+</script>
+
+</body>
+</html>

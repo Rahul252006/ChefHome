@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="main.js" defer type="module"></script>
+  <title>RideSplit</title>
+  <style>
+    @font-face {
+      font-family: "milker";
+      src: url("fonts/Milker.otf") format("opentype");
+    }
+    @font-face {
+      font-family: "lexend";
+      src: url("fonts/Lexend-VariableFont_wght.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "flowmery";
+      src: url("fonts/Flowmery-Regular.ttf") format("truetype");
+    }
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    /* INTRO SCREEN */
+    #intro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0E0E0E;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      animation: fadeOut 2.8s ease-in-out forwards;
+    }
+
+    .welcome-text {
+      font-family: "flowmery";
+      font-size: 40px;
+      color: #D6C48C;
+      opacity: 0;
+      animation: slideDown 1.8s ease-out forwards;
+    }
+
+    .brand-text {
+      font-family: "milker";
+      font-size: 70px;
+      color: #D6C48C;
+      margin-top: 0px;
+      opacity: 0;
+      animation: glowIn 2.2s ease-out forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes slideDown {
+      0% { opacity: 0; transform: translateY(-40px); }
+      60% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; }
+    }
+
+    @keyframes glowIn {
+      0% { opacity: 0; letter-spacing: 8px; }
+      100% { opacity: 1; letter-spacing: 0; }
+    }
+
+    @keyframes fadeOut {
+      0%, 80% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: "lexend";
+    }
+
+    body {
+      position: relative;
+      background-color: #0E0E0E;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.4;
+      filter: invert(0%) brightness(100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    header {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      padding: 15px 35px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.25);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      box-shadow: 
+        inset 0 0 10px rgba(255, 255, 255, 0.05),
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 1px rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(214, 196, 140, 0.15);
+      border-radius: 50px;
+      z-index: 100;
+      transition: all 0.3s ease-in-out;
+    }
+
+    header h1 {
+      font-family: "milker";
+      color: #D6C48C;
+      font-size: 28px;
+      margin: 0;
+      padding-top: 5px;
+    }
+
+    /* Glass Toggle Style */
+    .glass-toggle {
+      position: relative;
+      width: 80px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50px;
+      backdrop-filter: blur(15px) saturate(150%);
+      -webkit-backdrop-filter: blur(15px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      transition: background 0.4s ease;
+    }
+
+    .toggle-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 50px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.2));
+      box-shadow:
+        inset 0 0 10px rgba(255, 255, 255, 0.05),
+        0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .toggle-btn {
+      position: relative;
+      left: 5px;
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.3),
+        inset 0 0 5px rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .moon {
+      color: #fff;
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    /* Active State */
+    .glass-toggle.active .toggle-btn {
+      left: 45px;
+      background: rgba(214, 196, 140, 0.35);
+      box-shadow:
+        0 4px 15px rgba(214, 196, 140, 0.4),
+        inset 0 0 10px rgba(214, 196, 140, 0.4);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 65px;
+      right: 35px;
+      background: rgba(30, 30, 30, 0.15);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      border: 1px solid rgba(214, 196, 140, 0.15);
+      border-radius: 20px;
+      display: none;
+      margin-top: 20px;
+      flex-direction: column;
+      z-index: 9999;
+      height: 130px;
+      width: 180px;
+      box-shadow: 
+        inset 0 0 10px rgba(255, 255, 255, 0.05),
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown a {
+      text-decoration: none;
+      color: #D6C48C;
+      font-family: "lexend";
+      transition: 0.2s;
+      padding-left: 20px;
+      padding-top: 10px;
+    }
+
+    .dropdown a:hover {
+      color: #ffffff;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    section.buttons {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .slots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .s {
+      height: 100px;
+      width: 200px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      background: rgba(30, 30, 30, 0.3);
+      backdrop-filter: blur(12px);
+      color: #F5F5F5;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease-in-out;
+      position: relative;
+    }
+
+    .s a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      color: #D6C48C;
+      line-height: 100px;
+      text-align: center;
+      font-weight: 500;
+      transition: all 0.3s ease-in-out;
+      font-family: "milker";
+    }
+    .s:hover { 
+      transform: translateY(-5px); 
+      background: rgba(214, 196, 140, 0.25); 
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4); 
+    } 
+    .s:hover a { 
+      color: #ffffff; 
+    }
+    .s h2{
+      font-family: "milker";
+      padding-left: 100px;
+      font-size: 18px;
+    }
+
+    .mor {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #D6C48C;
+      font-family: "milker";
+      font-size: 16px;
+    }
+
+    .bo {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      background: rgba(30, 30, 30, 0.3);
+      backdrop-filter: blur(12px);
+      color: #F5F5F5;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 5px 25px rgba(73, 58, 12, 0.3);
+      transition: all 0.3s ease-in-out;
+      padding: 15px 35px;
+      margin-top: 90px;
+    }
+
+    .bo a {
+      text-decoration: none;
+      color: #D6C48C;
+      font-weight: 500;
+      transition: all 0.3s ease-in-out;
+      font-family: "lexend";
+    }
+
+    .bo:hover {
+      transform: translateY(-5px);
+      background: rgba(60, 45, 2, 0.25);
+      box-shadow: 0 10px 35px rgba(0, 122, 0, 0.4);
+      border: 1px solid rgba(27, 179, 0, 0.3);
+    }
+
+    .bo:hover a {
+      color: #12c50b;
+    }
+
+    h3 {
+      position: absolute;
+      text-align: center;
+      color: #F5F5F5;
+      margin-top: 270px;
+      font-weight: 400;
+      padding-left: 385px;
+      text-shadow: 0 0 30px rgb(0, 0, 0),0 0 40px black;
+    }
+
+    .pre{
+      position: absolute;
+      border-radius: 10px;
+      border: 10px;
+      background-color: #D6C48C;
+      color: #0E0E0E;
+      width: 150px;
+      margin-top: 170px;
+      font-family: "lexend";
+      margin-left: 660px;
+      height: 30px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    @keyframes dropdownOpen {
+      0% { opacity: 0; transform: translateY(-8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes dropdownClose {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-8px); }
+    }
+
+    .dropdown {
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    /* MOBILE RESPONSIVE FIXES */
+    @media (max-width: 768px) {
+      #intro .welcome-text {
+        font-size: 28px;
+      }
+      #intro .brand-text {
+        font-size: 50px;
+      }
+      .pre {
+        margin-left: 145px;
+        margin-right: auto;
+        margin-top: 150px;
+        width: 140px;
+        height: 35px;
+        font-size: 10px;
+      }
+      h3 {
+        padding-left: 8px;
+        margin-top: 250px;
+        font-size: 13px;
+      }
+      .slots {
+        gap: 20px;
+      }
+      .s {
+        width: 150px;
+        height: 90px;
+      }
+      .mor {
+        bottom: -25px;
+        font-size: 14px;
+      }
+      .bo {
+        width: 70%;
+        margin-top: 50px;
+        padding: 12px 20px;
+        font-size: 16px;
+      }
+      header h1 {
+        font-size: 22px;
+      }
+      .dropdown {
+        right: 20px;
+        width: 150px;
+        height: auto;
+        padding-bottom: 10px;
+        background-color: #0E0E0E;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- INTRO SCREEN -->
+  <div id="intro">
+    <h2 class="welcome-text">Welcome to</h2>
+    <h1 class="brand-text">CHEF HOME</h1>
+  </div>
+
+  <header>
+    <h1>CHEF HOME</h1>
+
+    <!-- Glass Toggle -->
+    <div class="glass-toggle" id="menuToggle">
+      <div class="toggle-bg"></div>
+      <div class="toggle-btn">
+        <span class="moon">M</span>
+      </div>
+    </div>
+
+    <div class="dropdown" id="menuDropdown">
+      <a href="history.html">History</a>
+      <a href="profile.html">Profile</a>
+      <a href="book.html">Contact Us</a>
+      <a href="promotions.html">Promote Us</a>
+    </div>
+  </header>
+
+  <main>
+    <h3>Book a professional chef to cook delicious meals at your home starting at ₹299</h3>
+    <button class="pre">Premium Chef Service</button>
+
+    <section class="buttons">
+      <div class="slots">
+        <button class="s">
+          <a href="bookchefmor.html">Morning</a>
+          <h2 class="mor">₹299</h2>
+        </button>
+        <button class="s">
+          <a href="bookchefmor.html">Afternoon</a>
+          <h2 class="mor">₹499</h2>
+        </button>
+        <button class="s">
+          <a href="bookchefmor.html">Evening</a>
+          <h2 class="mor">₹299</h2>
+        </button>
+      </div>
+
+      <button class="bo">
+        <a href="bookchefmor.html">Book a Chef Now ></a>
+      </button>
+    </section>
+  </main>
+
+  <script>
+  setTimeout(() => {
+    document.getElementById("intro").style.display = "none";
+  }, 3000);
+
+  const toggle = document.getElementById("menuToggle");
+  const dropdown = document.getElementById("menuDropdown");
+
+  toggle.addEventListener("click", () => {
+    toggle.classList.toggle("active");
+    if (toggle.classList.contains("active")) {
+      dropdown.style.display = "flex";
+      dropdown.style.animation = "dropdownOpen 0.25s forwards";
+    } else {
+      dropdown.style.animation = "dropdownClose 0.25s forwards";
+      setTimeout(() => (dropdown.style.display = "none"), 250);
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+      if (toggle.classList.contains("active")) {
+        toggle.classList.remove("active");
+        dropdown.style.animation = "dropdownClose 0.25s forwards";
+        setTimeout(() => (dropdown.style.display = "none"), 250);
+      }
+    }
+  });
+  </script>
+
+</body>
+</html>

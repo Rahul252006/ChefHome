@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Chef - Choose Menu</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+<style>
+    @font-face {
+        font-family: 'milker';
+        src: url('fonts/Milker.otf') format('opentype');
+    }
+    @font-face {
+        font-family: 'lexend';
+        src: url('fonts/Lexend-VariableFont_wght.ttf') format('truetype');
+    }
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    body {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "lexend", sans-serif;
+        font-size: 14px;
+        background-color: #0E0E0E;
+        color: #F5F5F5;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: absolute; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg"); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.2; 
+        filter: brightness(75%); 
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* Luxurious glass navbar */
+    header {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        padding: 15px 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        background: rgba(30, 30, 30, 0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        
+        box-shadow: 
+            inset 0 0 10px rgba(255, 255, 255, 0.05),
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            0 0 1px rgba(255, 255, 255, 0.1);
+        
+        border: 1px solid rgba(214, 196, 140, 0.15);
+        border-radius: 50px;
+        
+        z-index: 100;
+        transition: all 0.3s ease-in-out;
+    }
+    header:hover {
+        background: rgba(40, 40, 40, 0.35);
+        box-shadow: 
+            inset 0 0 15px rgba(255, 255, 255, 0.1),
+            0 12px 40px rgba(214, 196, 140, 0.5),
+            0 0 2px rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(214, 196, 140, 0.25);
+    }
+    
+    header h1 {
+        font-family: "milker";
+        color: #D6C48C;
+        font-size: 28px;
+        margin: 0;
+        letter-spacing: 1px;
+    }
+
+    main {
+        padding-top: 100px;
+        padding-bottom: 40px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container {
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        border-radius: 30px;
+        box-shadow: 
+            inset 0 0 10px rgba(255,255,255,0.05),
+            0 8px 32px rgba(0,0,0,0.4),
+            0 0 1px rgba(255,255,255,0.1);
+        padding: 25px 40px 40px 40px;
+        width: 700px;
+        max-width: 95%;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        border: 1px solid rgba(214,196,140,0.15);
+    }
+
+    h2 {
+        color: #D6C48C;
+        margin-bottom: 10px;
+        font-size: 18px;
+        border-bottom: 1px solid rgba(214,196,140,0.3);
+        padding-bottom: 5px;
+    }
+    
+    /* Title and Progress Bar */
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 5px;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        width: 60%; 
+        background: linear-gradient(90deg, #D6C48C, #e2c12d);
+        border-radius: 4px;
+    }
+
+    .step-text {
+        color: #A0A0A0;
+        font-size: 12px;
+        font-weight: 300;
+    }
+    
+    .main-title {
+        color: #F5F5F5;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    /* Menu Grid Layout */
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px 35px;
+        margin-bottom: 25px;
+    }
+    
+    .menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 0;
+        cursor: pointer;
+    }
+
+    .menu-item label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        flex-grow: 1;
+        font-size: 14px;
+        font-weight: 400;
+        color: #F5F5F5;
+        position: relative;
+        padding-left: 28px;
+    }
+    
+    /* Custom Checkbox */
+    .menu-item input[type="checkbox"] {
+        opacity: 0; 
+        position: absolute;
+    }
+
+    .menu-item label:before {
+        content: '';
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        flex-grow: 0;
+        border: 1px solid #D6C48C;
+        border-radius: 4px;
+        margin-right: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.2s;
+    }
+
+    .menu-item input[type="checkbox"]:checked + label:before {
+        background: #D6C48C;
+        border-color: #D6C48C;
+        box-shadow: 0 0 5px #d6c38c86;
+    }
+
+    .menu-item input[type="checkbox"]:checked + label:after {
+        content: '✔';
+        position: absolute;
+        color: #F5F5F5;
+        font-size: 11px;
+        line-height: 1;
+        left: 0;
+        top: 50%;
+        transform: translate(2px, -50%);
+        pointer-events: none;
+    }
+
+    .menu-price {
+        color: #D6C48C;
+        font-weight: 600;
+        font-size: 14px;
+        flex-shrink: 0;
+        padding-left: 15px;
+    }
+    
+    /* Special Instructions Textarea */
+    .special-instructions textarea {
+        width: 100%;
+        min-height: 45px;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        background: rgba(255,255,255,0.05);
+        color: #F5F5F5;
+        font-size: 13px;
+        outline: none;
+        resize: vertical;
+        transition: 0.3s all ease;
+    }
+
+    .special-instructions textarea:focus {
+        border: 1px solid #D6C48C;
+        box-shadow: 0 0 6px rgba(214,196,140,0.4);
+        background: rgba(255,255,255,0.1);
+    }
+    
+    /* Price Summary */
+    .price-summary-box {
+        background: rgba(0, 0, 0, 0.449);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        font-size: 14px;
+        color: #A0A0A0;
+    }
+
+    .price-row.total {
+        margin-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #F5F5F5;
+    }
+
+    .price-value {
+        font-weight: 700;
+        color: #F5F5F5;
+    }
+
+    .price-row.total .price-value {
+        color: #D6C48C;
+    }
+
+    /* Navigation */
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 25px;
+    }
+
+    .nav-button {
+        padding: 10px 25px;
+        border-radius: 15px;
+        font-family: "lexend", sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        font-weight: 500;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-button.previous {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #F5F5F5;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        height: 28px;
+    }
+
+    .nav-button.previous:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-button.proceed {
+        border: 1px solid rgba(68, 255, 0, 0.3);
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(12px);
+        color: rgb(43, 255, 0);
+        font-size: 16px;
+        padding: 12px 30px;
+        cursor: pointer;
+        box-shadow: 0 5px 25px rgba(73, 58, 12, 0.3);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .nav-button.proceed:hover {
+        background: rgba(0, 0, 0, 0.25);
+        box-shadow: 0 10px 35px rgba(0, 122, 0, 0.4);
+        border: 1px solid rgba(27, 179, 0, 0.3);
+    }
+
+    .nav-button svg {
+        margin-right: 6px;
+    }
+    @media (max-width: 600px) {
+    .container {
+        padding: 30px 20px;
+        max-width: 80%;
+    }
+    .special-instructions{
+        max-width: 90%;
+    }
+    .nav-button.proceed{
+        font-size: 10px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>CHEF HOME</h1>
+</header>
+
+<main>
+    <div class="container">
+        
+        <div class="header-content">
+            <div class="main-title">Book a Chef</div>
+            <div class="step-text">Step 3 of 5</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+
+        <h2 id="menu-section-title">Choose Your Menu</h2>
+        <form id="menuForm">
+            <div class="menu-grid">
+                
+                <div class="menu-item">
+                    <input type="checkbox" id="item1" name="menu_item" value="60" data-name="Idli with Sambar & Chutney">
+                    <label for="item1">Idli with Sambar & Chutney</label>
+                    <span class="menu-price">₹60</span>
+                </div>
+
+                <div class="menu-item">
+                    <input type="checkbox" id="item2" name="menu_item" value="70" data-name="Dosa with Potato Curry">
+                    <label for="item2">Dosa with Potato Curry</label>
+                    <span class="menu-price">₹70</span>
+                </div>
+
+                <div class="menu-item">
+                    <input type="checkbox" id="item3" name="menu_item" value="50" data-name="Upma with Coconut Chutney">
+                    <label for="item3">Upma with Coconut Chutney</label>
+                    <span class="menu-price">₹50</span>
+                </div>
+
+                <div class="menu-item">
+                    <input type="checkbox" id="item4" name="menu_item" value="50" data-name="Poha with Peanuts">
+                    <label for="item4">Poha with Peanuts</label>
+                    <span class="menu-price">₹50</span>
+                </div>
+
+                <div class="menu-item">
+                    <input type="checkbox" id="item5" name="menu_item" value="65" data-name="Paratha with Pickle">
+                    <label for="item5">Paratha with Pickle</label>
+                    <span class="menu-price">₹65</span>
+                </div>
+
+                <div class="menu-item">
+                    <input type="checkbox" id="item6" name="menu_item" value="55" data-name="Bread Omelette">
+                    <label for="item6">Bread Omelette</label>
+                    <span class="menu-price">₹55</span>
+                </div>
+            </div>
+
+            <h2>Special Instructions</h2>
+            <div class="special-instructions">
+                <p style="margin-top: 0; font-size: 13px; color: #A0A0A0;">Any Special Instructions?</p>
+                <textarea 
+                    placeholder="e.g. less spicy, no onions, etc." 
+                    id="specialInstructions"
+                ></textarea>
+            </div>
+            
+            <h2>Price Summary</h2>
+            <div class="price-summary-box">
+                <div class="price-row">
+                    <span>Chef Fee:</span>
+                    <span class="price-value">₹<span id="chefFee">399</span></span>
+                </div>
+                <div class="price-row">
+                    <span>Items Total:</span>
+                    <span class="price-value">₹<span id="itemsTotal">0</span></span>
+                </div>
+                <div class="price-row total">
+                    <span>Total:</span>
+                    <span class="price-value">₹<span id="finalTotal">0</span></span>
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <a href="step2.html" class="nav-button previous">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                    Previous
+                </a>
+                <button type="submit" class="nav-button proceed">
+                    Proceed to Payment
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('input[name="menu_item"]');
+        const chefFeeElement = document.getElementById('chefFee');
+        const itemsTotalElement = document.getElementById('itemsTotal');
+        const finalTotalElement = document.getElementById('finalTotal');
+        const menuForm = document.getElementById('menuForm');
+
+        const chefFee = parseInt(chefFeeElement.textContent) || 399;
+
+        function updatePriceSummary() {
+            let itemsTotal = 0;
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    itemsTotal += parseInt(checkbox.value) || 0; 
+                }
+            });
+
+            const finalTotal = itemsTotal + chefFee;
+
+            itemsTotalElement.textContent = itemsTotal;
+            finalTotalElement.textContent = finalTotal;
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updatePriceSummary);
+        });
+        
+        menuForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const selectedItems = Array.from(checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => ({
+                name: cb.dataset.name,
+                price: parseInt(cb.value)
+            }));
+
+        // Calculate items total
+        const itemsTotal = selectedItems.reduce((sum, item) => sum + item.price, 0);
+
+        const chefFee = parseInt(chefFeeElement.textContent) || 399;
+        const finalTotal = chefFee + itemsTotal;
+
+        const specialInstructions = document.getElementById('specialInstructions').value;
+
+        // Save **everything** to localStorage
+        localStorage.setItem('orderData', JSON.stringify({
+            chefFee,
+            itemsTotal,
+            finalTotal,
+            selectedItems,
+            specialInstructions
+        }));
+
+        // Navigate to payment page
+        window.location.href = 'payment.html';
+    });
+
+
+        updatePriceSummary();
+    });
+</script>
+
+</body>
+</html>

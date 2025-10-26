@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Chef</title>
+
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+<style>
+    @font-face {
+        font-family: 'milker';
+        src: url('fonts/Milker.otf') format('opentype');
+    }
+    @font-face {
+        font-family: 'lexend';
+        src: url('fonts/Lexend-VariableFont_wght.ttf') format('truetype');
+    }
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: "lexend", sans-serif;
+        background-color: #0E0E0E;
+        color: #F5F5F5;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Full-page background */
+    body::before {
+        content: "";
+        position: absolute; /* Covers full viewport */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.2;
+        filter: brightness(75%);
+        z-index: -1;
+        
+    }
+
+    /* Glass navbar */
+    header {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        padding: 15px 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        background: rgba(30, 30, 30, 0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        
+        box-shadow: 
+            inset 0 0 10px rgba(255, 255, 255, 0.05),
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            0 0 1px rgba(255, 255, 255, 0.1);
+        
+        border: 1px solid rgba(214, 196, 140, 0.15);
+        border-radius: 50px;
+        
+        z-index: 100;
+        transition: all 0.3s ease-in-out;
+    }
+    header:hover {
+        background: rgba(40, 40, 40, 0.35);
+        box-shadow: 
+            inset 0 0 15px rgba(255, 255, 255, 0.1),
+            0 12px 40px rgba(214, 196, 140, 0.5),
+            0 0 2px rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(214, 196, 140, 0.25);
+    }
+
+    header h1 {
+        font-family: "milker";
+        color: #D6C48C;
+        font-size: 32px;
+        margin: 0;
+        letter-spacing: 1px;
+    }
+
+    main {
+        padding-top: 125px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 50px; /* for scrolling */
+    }
+
+    .container {
+        border-radius: 30px;
+        padding: 50px 60px;
+        width: 850px;
+        max-width: 95%;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 50px;
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        box-shadow: 
+            inset 0 0 10px rgba(255,255,255,0.05),
+            0 8px 32px rgba(0,0,0,0.4),
+            0 0 1px rgba(255,255,255,0.1);
+        border: 1px solid rgba(214,196,140,0.15);
+    }
+
+    h2 {
+        color: #D6C48C;
+        margin-bottom: 10px;
+        font-size: 22px;
+        border-bottom: 1px solid rgba(214,196,140,0.3);
+        padding-bottom: 5px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .row {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .row > div {
+        flex: 1;
+        min-width: 200px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #F5F5F5;
+    }
+
+    input, select {
+        padding: 12px 15px;
+        border-radius: 12px;
+        border: 1px ;
+        background: rgba(255,255,255,0.05);
+        color: #F5F5F5;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s all ease;
+    }
+
+    input:focus, select:focus {
+        border: 1px solid #D6C48C;
+        box-shadow: 0 0 8px rgba(214,196,140,0.4);
+        background: rgba(255,255,255,0.1);
+    }
+
+    select {
+        appearance: none;
+        cursor: pointer;
+        background-image: linear-gradient(45deg, transparent 50%, #D6C48C 50%),
+                          linear-gradient(135deg, #D6C48C 50%, transparent 50%);
+        background-position: calc(100% - 20px) calc(1em + 2px),
+                             calc(100% - 15px) calc(1em + 2px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+    }
+
+    .next {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      background: rgba(30, 30, 30, 0.3);
+      backdrop-filter: blur(12px);
+      color: #F5F5F5;
+      font-family: "milker";
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 5px 25px rgba(73, 58, 12, 0.3);
+      transition: all 0.3s ease-in-out;
+      padding-top: 5px;
+      width: 100px;
+      height: 40px;
+      align-self: flex-end;
+    }
+
+    .chef-card {
+        background: rgba(0, 0, 0, 0.449);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        flex: 1;
+        min-width: 150px;
+        color: #F5F5F5;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .chef-card:hover {
+        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.237);
+    }
+
+    .chef-card.selected {
+        border: 2px solid #ffffff;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Flatpickr glass style overrides */
+    .flatpickr-calendar {
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid rgba(214,196,140,0.2) !important;
+        color: #F5F5F5 !important;
+    }
+    .flatpickr-day.selected,
+    .flatpickr-day:hover {
+        background: rgba(214,196,140,0.7) !important;
+        color: #0E0E0E !important;
+    }
+    .flatpickr-months .flatpickr-prev-month,
+    .flatpickr-months .flatpickr-next-month {
+        color: #473602 !important;
+    }
+    @media (max-width: 600px) {
+    .container {
+        padding: 30px 20px;
+        max-width: 80%;
+    }
+
+    h2, h3 {
+        text-align: center; /* Center headers on mobile */
+    }
+
+    .row {
+        flex-direction: column; /* Stack rows vertically */
+        gap: 15px;
+        font-size: 15px;
+    }
+
+    .chef-card {
+        min-width: auto;
+        width: 85%; /* Cards take full width */
+        text-align: center;
+        
+    }
+
+    .next {
+        width: 100%; /* Next button full width */
+        align-self: center;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>CHEF HOME</h1>
+</header>
+
+<main>
+    <div class="container">
+        <h2>Service Details</h2>
+        <form id="signinForm">
+            <div class="row">
+                <div>
+                    <label for="state">Service Type</label>
+                    <select id="state" required>
+                        <option value="">Select Service Type</option>
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                        <option value="Evening">Evening</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="date">Select Date</label>
+                    <input type="text" id="date" placeholder="Select Date" required>
+                </div>
+                <div>
+                    <label for="timesl">Time Slot</label>
+                    <select id="timesl" required disabled>
+                        <option value="">Select Time Slot</option>
+                    </select>
+                </div>
+            </div>
+
+            <h2>Available Chefs</h2>
+            <div class="row" id="chefsRow">
+                <div class="chef-card">Select service & time to see available chefs</div>
+            </div>
+            
+            <button type="submit" class="next">Next</button>
+        </form>
+    </div>
+</main>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#date", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        disableMobile: true
+    });
+
+    const serviceSelect = document.getElementById('state');
+    const timeslotSelect = document.getElementById('timesl');
+    const chefsRow = document.getElementById('chefsRow');
+    let selectedChef = null;
+
+    const timeSlots = {
+        "Morning": ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM"],
+        "Afternoon": ["12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"],
+        "Evening": ["5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"]
+    };
+
+    const chefs = [
+        {name: "Chef A", rating: 4.8, available: {"Morning": ["7:00 AM","9:00 AM"], "Afternoon": ["12:00 PM"]}},
+        {name: "Chef B", rating: 4.5, available: {"Morning": ["8:00 AM"], "Evening": ["5:00 PM","7:00 PM"]}},
+        {name: "Chef C", rating: 4.9, available: {"Afternoon": ["1:00 PM","2:00 PM"], "Evening": ["6:00 PM"]}},
+        {name: "Chef D", rating: 4.2, available: {"Morning": ["10:00 AM"], "Afternoon": ["3:00 PM"], "Evening": ["8:00 PM"]}},
+        {name: "Chef E", rating: 4.7, available: {"Morning": ["7:00 AM","10:00 AM"], "Evening": ["6:00 PM"]}}
+    ];
+
+    timeslotSelect.disabled = true;
+
+    serviceSelect.addEventListener('change', () => {
+        const selectedService = serviceSelect.value;
+        timeslotSelect.innerHTML = '<option value="">Select Time Slot</option>';
+
+        if (timeSlots[selectedService]) {
+            timeslotSelect.disabled = false;
+            timeSlots[selectedService].forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                timeslotSelect.appendChild(option);
+            });
+        } else {
+            timeslotSelect.disabled = true;
+        }
+
+        chefsRow.innerHTML = '<div class="chef-card">Select service & time to see available chefs</div>';
+        selectedChef = null;
+    });
+
+    timeslotSelect.addEventListener('change', () => {
+        const selectedService = serviceSelect.value;
+        const selectedTime = timeslotSelect.value;
+        chefsRow.innerHTML = "";
+        selectedChef = null;
+
+        const availableChefs = chefs.filter(chef => 
+            chef.available[selectedService]?.includes(selectedTime)
+        );
+
+        if (availableChefs.length === 0) {
+            chefsRow.innerHTML = '<div class="chef-card">No chefs available</div>';
+        } else {
+            availableChefs.forEach(chef => {
+                const div = document.createElement('div');
+                div.classList.add('chef-card');
+                div.innerHTML = `<strong>${chef.name}</strong><br>Rating: ${chef.rating} ⭐`;
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.chef-card.selected').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    div.classList.add('selected');
+                    selectedChef = chef;
+                });
+                chefsRow.appendChild(div);
+            });
+        }
+    });
+
+    document.getElementById('signinForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!selectedChef) {
+            alert("Please select a chef before proceeding!");
+            return;
+        }
+        console.log("Selected Chef:", selectedChef);
+        window.location.href = 'step3.html';
+    });
+</script>
+</body>
+</html>

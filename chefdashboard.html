@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chef Dashboard | CHEF HOME</title>
+
+  <style>
+    @font-face { font-family: "milker"; src: url("fonts/Milker.otf"); }
+    @font-face { font-family: "lexend"; src: url("fonts/Lexend-VariableFont_wght.ttf"); }
+    @font-face { font-family: "flowmery"; src: url("fonts/Flowmery-Regular.ttf"); }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { font-family:"lexend"; background:#0E0E0E; color:#F5F5F5; min-height:100vh; }
+
+    body::before {
+      content:"";
+      position:fixed; inset:0;
+      background:url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg") center/cover no-repeat;
+      opacity:0.35; z-index:-1;
+    }
+
+    header {
+      position:fixed; top:20px; left:20px; right:20px; display:flex;
+      justify-content:space-between; align-items:center; padding:15px 35px;
+      background:rgba(30,30,30,0.25); backdrop-filter:blur(20px); border-radius:50px;
+      border:1px solid rgba(214,196,140,0.15); z-index:999;
+    }
+    header h1 { font-family:"milker"; color:#D6C48C; font-size:28px; }
+
+    .btn { padding:10px 14px; border-radius:12px; border:1px solid rgba(214,196,140,0.12); background: rgba(214,196,140,0.06); color:#D6C48C; cursor:pointer; font-weight:600;
+    transition: all 0.3s ease-in-out; }
+    .btn:hover{ transform: translateY(-2px); }
+
+    main { padding:120px 40px 40px; display:flex; gap:30px; flex-wrap:wrap; justify-content:center; }
+
+    .col-left { 
+        width:320px; 
+        display:flex; 
+        flex-direction:column; 
+        gap:20px; 
+        
+    }
+    .col-right { flex:1; min-width:320px; max-width:980px; display:flex; flex-direction:column; gap:20px; }
+
+    .card { 
+        border-radius:20px;  
+        padding:18px; 
+        background: rgba(30, 30, 30, 0.4);
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        box-shadow: inset 0 0 15px rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.4), 0 0 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(214,196,140,0.2);
+        box-sizing: border-box;
+    }
+
+    .profile { display:flex; gap:12px; align-items:center; }
+    .avatar { width:72px; height:72px; border-radius:14px; background: linear-gradient(180deg,#D6C48C,#B88F4D); display:flex; align-items:center; justify-content:center; color:#0E0E0E; font-weight:700; font-size:22px; }
+    .meta .name { font-family:"milker"; color:#D6C48C; font-size:18px; margin-bottom:4px; margin-top: 0px;}
+    .meta .role { font-size:13px; color:#E8E8E8; }
+
+    .stats { display:flex; gap:12px; margin-top:12px; }
+    .stat { flex:1; padding:12px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); text-align:center; }
+    .stat .num { font-family:"milker"; color:#D6C48C; font-size:20px; }
+    .stat .label { font-size:12px; color:#E8E8E8; margin-top:6px; }
+
+    .notifications { max-height:220px; overflow:auto; display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+    .notif { padding:10px; border-radius:12px; background:rgba(0,0,0,0.25); border:1px solid rgba(214,196,140,0.06); color:#EDEDEB; }
+
+    .section-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .section-title h2 { font-family:"milker"; color:#D6C48C; margin:0; font-size:20px; }
+
+    .bookings-list { display:flex; flex-direction:column; gap:10px; }
+    .booking { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:12px; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.04); }
+    .booking .amount { font-family:"milker"; color:#D6C48C; font-size:16px; }
+    .quick-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
+    .quick { flex:1; min-width:160px; padding:12px; border-radius:12px; background: rgba(30,30,30,0.25); border:1px solid rgba(255,255,255,0.04); text-align:center; }
+    .quick .big { font-family:"milker"; color:#D6C48C; font-size:20px; }
+
+    @media (max-width:1000px){ main{padding-top:100px;} .col-left{width:100%; order:2;} .col-right{order:1;} }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CHEF HOME</h1>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span id="chefLocalTime" style="font-size:13px;color:#BDBDBD;"></span>
+    <button id="logoutBtn" class="btn">Logout</button>
+  </div>
+</header>
+
+<main>
+  <div class="col-left">
+    <div class="card" id="profileCard">
+      <div class="profile">
+        <div class="avatar" id="avatarInitial">C</div>
+        <div class="meta">
+          <div class="name" id="chefName">Chef Name</div>
+          <div class="role">Chef • <span id="chefEmail">chef@example.com</span></div>
+          <div style="margin-top:8px;"><button class="btn" id="editProfileBtn">Edit Profile</button></div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="earningsTotal">₹0</div><div class="label">Earnings</div></div>
+        <div class="stat"><div class="num" id="ratingAvg">0.0</div><div class="label">Rating</div></div>
+        <div class="stat"><div class="num" id="upcomingCount">0</div><div class="label">Upcoming</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:700; color:#D6C48C">Notifications</div>
+        <button class="btn" id="markAllRead">Mark all read</button>
+      </div>
+      <div class="notifications" id="notificationsList">
+        No notifications
+      </div>
+    </div>
+  </div>
+
+  <div class="col-right">
+    <div class="card" id="todayCard">
+      <div class="section-title">
+        <h2>Today's Bookings</h2>
+        <button class="btn" id="refreshBtn">Refresh</button>
+      </div>
+      <div class="bookings-list" id="todayBookings"></div>
+      <div class="quick-row">
+        <div class="quick"><div class="big" id="todayCount">0</div><p>Today</p></div>
+        <div class="quick"><div class="big" id="weekCount">0</div><p>This Week</p></div>
+        <div class="quick"><div class="big" id="monthEarnings">₹0</div><p>This Month</p></div>
+      </div>
+    </div>
+
+    <div class="card" id="upcomingCard">
+      <div class="section-title">
+        <h2>Upcoming Bookings</h2>
+        <button class="btn" id="viewAllBookings">View All</button>
+      </div>
+      <div class="bookings-list" id="upcomingBookings"></div>
+    </div>
+
+    <div class="card" id="reviewsCard">
+      <div class="section-title"><h2>Ratings & Reviews</h2></div>
+      <div id="reviewsList">No reviews yet.</div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, onChildAdded } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDv-jV2uHrp8Xchmr3u540J6xmWK8PZEec",
+  authDomain: "login-c2893.firebaseapp.com",
+  projectId: "login-c2893",
+  storageBucket: "login-c2893.firebasestorage.app",
+  messagingSenderId: "848550093693",
+  appId: "1:848550093693:web:b1142db0e0aa38f8afe214",
+  measurementId: "G-KB4XZT429X"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const rtdb = getDatabase(app); // Realtime DB
+const fstore = getFirestore(app); // Firestore
+const auth = getAuth(app);
+
+// DOM elements
+const avatarEl = document.getElementById("avatarInitial");
+const chefNameEl = document.getElementById("chefName");
+const chefEmailEl = document.getElementById("chefEmail");
+const earningsTotalEl = document.getElementById("earningsTotal");
+const ratingAvgEl = document.getElementById("ratingAvg");
+const upcomingCountEl = document.getElementById("upcomingCount");
+const notificationsListEl = document.getElementById("notificationsList");
+const todayBookingsEl = document.getElementById("todayBookings");
+const upcomingBookingsEl = document.getElementById("upcomingBookings");
+const reviewsListEl = document.getElementById("reviewsList");
+const todayCountEl = document.getElementById("todayCount");
+const weekCountEl = document.getElementById("weekCount");
+const monthEarningsEl = document.getElementById("monthEarnings");
+const chefLocalTimeEl = document.getElementById("chefLocalTime");
+const refreshBtn = document.getElementById("refreshBtn");
+const markAllReadBtn = document.getElementById("markAllRead");
+const viewAllBookingsBtn = document.getElementById("viewAllBookings");
+const editProfileBtn = document.getElementById("editProfileBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// Placeholder chefId for Realtime DB
+const chefId = "chef1";
+
+// ------------------- Realtime DB: Orders Notifications -------------------
+const ordersRef = ref(rtdb,'orders');
+onChildAdded(ordersRef, (snap)=>{
+  const order = snap.val();
+  if(order.chefId===chefId && order.status==="pending"){
+    const notifDiv = document.createElement('div');
+    notifDiv.classList.add('notif');
+    notifDiv.innerHTML = `<strong style="color:#D6C48C">New Order</strong><br/>
+                          ${order.customerName} • ${order.date} ${order.time}`;
+    notificationsListEl.prepend(notifDiv);
+
+    const today = new Date().toISOString().split("T")[0];
+    if(order.date===today){
+      const bookingDiv = document.createElement('div');
+      bookingDiv.classList.add('booking');
+      bookingDiv.innerHTML = `<div style="font-weight:700;color:#D6C48C">${order.customerName}</div>
+                              <div style="font-size:13px;color:#E8E8E8">${order.date} ${order.time}</div>
+                              <div class="amount">₹${order.amount||"-"}</div>`;
+      todayBookingsEl.prepend(bookingDiv);
+    }
+
+    alert(`New order from ${order.customerName} at ${order.time}`);
+  }
+});
+
+// ------------------- Firestore: Handle Chef Login -------------------
+async function handleChefLogin(chefUid) {
+  const chefRef = doc(fstore, "users", chefUid);
+  const chefSnap = await getDoc(chefRef);
+
+  if(chefSnap.exists()) {
+    const chefData = chefSnap.data();
+    if(chefData.available === undefined) {
+      await updateDoc(chefRef, { available: true });
+      console.log("Field 'available' added for chef:", chefUid);
+    }
+  } else {
+    await setDoc(chefRef, { name: "", email: "", available: true });
+    console.log("New chef document created:", chefUid);
+  }
+}
+
+// ------------------- Auth + Firestore Data -------------------
+onAuthStateChanged(auth, async (user) => {
+  if(user) { 
+    await handleChefLogin(user.uid);  // <-- ensure fields exist
+    await loadChefData(user); 
+  } else { 
+    window.location.href="signin.html"; 
+  }
+});
+
+async function loadChefData(user){
+  const userDoc = doc(fstore,"users",user.uid);
+  const snap = await getDoc(userDoc);
+  const profile = snap.exists() ? snap.data() : {};
+  chefNameEl.textContent = profile.name || user.displayName || "Chef";
+  chefEmailEl.textContent = profile.email || user.email;
+  avatarEl.textContent = (profile.name ? profile.name[0] : "C").toUpperCase();
+
+  const bookingsSnap = await getDocs(query(
+    collection(fstore,"bookings"),
+    where("chefId","==",user.uid),
+    orderBy("datetime","asc")
+  ));
+  const bookings = [];
+  bookingsSnap.forEach(d=>bookings.push({...d.data(),id:d.id}));
+  renderBookings(bookings);
+
+  await loadNotifications(user.uid);
+}
+
+// ------------------- Render Bookings / Reviews / Notifications -------------------
+// (Keep your existing functions renderBookings, renderBookingsList, renderReviews, loadNotifications here)
+// ... (no change needed) ...
+
+// ------------------- Logout + Buttons -------------------
+logoutBtn.addEventListener("click", async()=>{ await signOut(auth); window.location.href="signin.html"; });
+refreshBtn.addEventListener("click",()=>onAuthStateChanged(auth,user=>user && loadChefData(user)));
+markAllReadBtn.addEventListener("click",()=>alert("Mark all read functionality here."));
+viewAllBookingsBtn.addEventListener("click",()=>alert("Redirect to all bookings page."));
+editProfileBtn.addEventListener("click",()=>alert("Redirect to edit profile page."));
+
+// ------------------- Clock -------------------
+setInterval(()=>{ chefLocalTimeEl.textContent = new Date().toLocaleString(); },1000);
+</script>
+
+
+</body>
+</html>

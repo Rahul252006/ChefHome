@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chef Dashboard | CHEF HOME</title>
+
+  <style>
+    /* ============ FONTS ============ */
+    @font-face { font-family: "milker"; src: url("fonts/Milker.otf") format("opentype"); }
+    @font-face { font-family: "lexend"; src: url("fonts/Lexend-VariableFont_wght.ttf") format("truetype"); }
+    @font-face { font-family: "flowmery"; src: url("fonts/Flowmery-Regular.ttf") format("truetype"); }
+
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    html,body { height:100%; margin:0; font-family:"lexend",system-ui,-apple-system,"Segoe UI",Roboto; background:#0E0E0E; color: #F5F5F5; }
+
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg");
+      background-size: cover; background-position:center; opacity:0.4; z-index:-1; pointer-events:none;
+    }
+
+    /* ============ INTRO ============ */
+    #intro {
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;
+      z-index:10000; background:#0E0E0E; animation: fadeOut 2.8s ease-in-out forwards;
+    }
+    .welcome-text{ font-family:"flowmery"; font-size:40px; color:#D6C48C; opacity:0; animation: slideDown 1.8s ease-out forwards; }
+    .brand-text{ font-family:"milker"; font-size:70px; color:#D6C48C; margin:0; opacity:0; animation: glowIn 2.2s ease-out forwards; animation-delay:0.3s; }
+
+    @keyframes fadeOut { 0%,80% { opacity:1 } 100% { opacity:0; visibility:hidden } }
+    @keyframes slideDown { 0%{opacity:0;transform:translateY(-40px)} 60%{opacity:1;transform:translateY(0)} 100%{opacity:1} }
+    @keyframes glowIn { 0%{opacity:0;letter-spacing:8px} 100%{opacity:1;letter-spacing:0} }
+
+    /* ============ HEADER ============ */
+    header {
+      position:fixed; top:20px; left:20px; right:20px; padding:15px 35px; display:flex; justify-content:space-between; align-items:center;
+      background: rgba(30,30,30,0.25); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter:blur(20px) saturate(150%);
+      border-radius:50px; border:1px solid rgba(214,196,140,0.15); z-index:9999;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.4);
+    }
+    header h1 { font-family:"milker"; color:#D6C48C; font-size:28px; margin:0; padding-top:5px; }
+
+    /* glass toggle (menu) */
+    .glass-toggle { 
+        position:relative; 
+        width:80px; height:40px; 
+        border-radius:50px; background: 
+        rgba(255,255,255,0.05); cursor:pointer; 
+        overflow:hidden; 
+    }
+    .toggle-bg { position:absolute; inset:0; border-radius:50px; background:linear-gradient(145deg, rgba(255,255,255,0.08), rgba(0,0,0,0.2)); }
+    .toggle-btn { 
+        position:relative; 
+        left:5px; 
+        margin-top: 5px;
+        height:30px; 
+        width:30px; 
+        border-radius:50%; 
+        background:rgba(255,255,255,0.25); 
+        display:flex; align-items:center; 
+        justify-content:center; 
+        transition:all 0.4s cubic-bezier(.4,0,.2,1); 
+    }
+    .glass-toggle.active .toggle-btn { left:45px; background: rgba(214,196,140,0.35); box-shadow: 0 4px 15px rgba(214,196,140,0.4), inset 0 0 10px rgba(214,196,140,0.4); }
+    .moon { color:#fff; font-size:16px; pointer-events:none; font-weight:700; }
+
+    .dropdown { position:absolute; top:65px; right:35px; display:none; flex-direction:column; width:240px; height:auto; border-radius:20px; padding:12px 0; background:rgb(30, 30, 30); border:1px solid rgba(214,196,140,0.15); z-index:99999; }
+    .dropdown a { color:#D6C48C; text-decoration:none; padding:10px 20px; display:block; }
+    .dropdown a:hover{ color:#fff; }
+
+    /* ============ LAYOUT ============ */
+    main { padding: 120px 40px 40px 40px; min-height:100vh; display:flex; gap:30px; align-items:flex-start; justify-content:center; flex-wrap:wrap; }
+
+    /* Left column (profile + stats + notifications) */
+    .col-left { width:320px; max-width:95%; display:flex; flex-direction:column; gap:20px; }
+
+    .card { border-radius:20px; background:rgba(30,30,30,0.35); border:1px solid rgba(255,255,255,0.06); padding:18px; box-shadow: 0 8px 40px rgba(0,0,0,0.45); backdrop-filter:blur(12px); }
+
+    .profile { display:flex; gap:12px; align-items:center; }
+    .avatar { width:72px; height:72px; border-radius:14px; background: linear-gradient(180deg,#D6C48C,#B88F4D); display:flex; align-items:center; justify-content:center; color:#0E0E0E; font-weight:700; font-size:22px; }
+    .profile .meta { display:flex; flex-direction:column; }
+    .profile .meta .name { font-family:"milker"; color:#D6C48C; font-size:18px; margin-bottom:4px; }
+    .profile .meta .role { font-size:13px; color:#E8E8E8; }
+
+    .stats { display:flex; gap:12px; margin-top:8px; }
+    .stat { flex:1; padding:12px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); text-align:center; }
+    .stat .num { font-family:"milker"; color:#D6C48C; font-size:20px; }
+    .stat .label { font-size:12px; color:#E8E8E8; margin-top:6px; }
+
+    .notifications { max-height:220px; overflow:auto; display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+    .notif { padding:10px; border-radius:12px; background:rgba(0,0,0,0.25); border:1px solid rgba(214,196,140,0.06); color:#EDEDEB; }
+
+    /* Right column (bookings + analytics) */
+    .col-right { flex:1; min-width:320px; max-width:980px; display:flex; flex-direction:column; gap:20px; }
+
+    .section-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .section-title h2 { font-family:"milker"; color:#D6C48C; margin:0; font-size:20px; }
+    .actions { display:flex; gap:10px; align-items:center; }
+
+    .bookings-list { display:flex; flex-direction:column; gap:10px; }
+    .booking { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:12px; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.04); }
+    .booking .left { display:flex; gap:12px; align-items:center; }
+    .booking .left .when { font-size:13px; color:#E8E8E8; }
+    .booking .amount { font-family:"milker"; color:#D6C48C; font-size:16px; }
+
+    .divider { height:1px; background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06)); margin:10px 0; border-radius:1px; }
+
+    /* small cards row for quick stats */
+    .quick-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .quick { flex:1; min-width:160px; padding:12px; border-radius:12px; background: rgba(30,30,30,0.25); border:1px solid rgba(255,255,255,0.04); text-align:center; }
+    .quick .big { font-family:"milker"; color:#D6C48C; font-size:20px; }
+    .quick p { margin:6px 0 0 0; color:#E8E8E8; font-size:13px; }
+
+    /* Buttons */
+    .btn { padding:10px 14px; border-radius:12px; border:1px solid rgba(214,196,140,0.12); background: rgba(214,196,140,0.06); color:#D6C48C; cursor:pointer; font-weight:600; }
+    .btn:hover{ transform: translateY(-3px); }
+
+    /* responsive */
+    @media (max-width:1000px){ main { padding-top:100px; } .col-left{ width:100%; order:2 } .col-right{ order:1 } }
+    @media (max-width:640px){ .profile .meta .name{ font-size:16px } .brand-text{ font-size:48px } }
+  </style>
+</head>
+<body>
+
+  <!-- INTRO -->
+  <div id="intro">
+    <h2 class="welcome-text">Welcome back</h2>
+    <h1 class="brand-text">CHEF HOME</h1>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <h1>CHEF HOME</h1>
+
+    <div style="display:flex; align-items:center; gap:12px; position:relative;">
+      <div style="display:flex; flex-direction:column; align-items:flex-end; margin-right:8px;">
+        <small id="lastSeen" style="color:#E8E8E8; font-size:12px; opacity:0.9">—</small>
+        <small id="chefLocalTime" style="color:#BDBDBD; font-size:12px">—</small>
+      </div>
+
+      <!-- Glass Toggle -->
+      <div class="glass-toggle" id="menuToggle" aria-label="menu toggle">
+        <div class="toggle-bg"></div>
+        <div class="toggle-btn"><span class="moon">M</span></div>
+      </div>
+
+      <div class="dropdown" id="menuDropdown">
+        <a id="navBookings" href="#bookings">Bookings</a>
+        <a id="navProfile" href="#profile">Profile</a>
+        <a id="navPromote" href="#promote">Promotions</a>
+        <a id="navLogout" href="#" style="color:#ffb3b3">Sign out</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD -->
+  <main>
+    <!-- LEFT: profile, stats, notifications -->
+    <div class="col-left">
+      <div class="card" id="profileCard">
+        <div class="profile">
+          <div class="avatar" id="avatarInitial">C</div>
+          <div class="meta">
+            <div class="name" id="chefName">Chef Name</div>
+            <div class="role">Chef • <span id="chefEmail">chef@example.com</span></div>
+            <div style="margin-top:8px;">
+              <button class="btn" id="editProfileBtn">Edit Profile</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats" style="margin-top:14px;">
+          <div class="stat">
+            <div class="num" id="earningsTotal">₹0</div>
+            <div class="label">Earnings</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="ratingAvg">0.0</div>
+            <div class="label">Rating</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="upcomingCount">0</div>
+            <div class="label">Upcoming</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:700; color:#D6C48C">Notifications</div>
+          <button class="btn" id="markAllRead">Mark all read</button>
+        </div>
+        <div class="notifications" id="notificationsList">
+          <!-- notifications injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: bookings + analytics -->
+    <div class="col-right">
+      <div class="card" id="todayCard">
+        <div class="section-title">
+          <h2>Today's Bookings</h2>
+          <div class="actions">
+            <button class="btn" id="refreshBtn">Refresh</button>
+          </div>
+        </div>
+
+        <div class="bookings-list" id="todayBookings">
+          <!-- today's bookings -->
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="margin-top:10px;">
+          <div style="font-weight:700; color:#D6C48C">Quick Summary</div>
+          <div class="quick-row" style="margin-top:10px;">
+            <div class="quick"><div class="big" id="todayCount">0</div><p>Today</p></div>
+            <div class="quick"><div class="big" id="weekCount">0</div><p>This Week</p></div>
+            <div class="quick"><div class="big" id="monthEarnings">₹0</div><p>This Month</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="upcomingCard">
+        <div class="section-title">
+          <h2>Upcoming Bookings</h2>
+          <div class="actions">
+            <button class="btn" id="viewAllBookings">View All</button>
+          </div>
+        </div>
+
+        <div class="bookings-list" id="upcomingBookings">
+          <!-- upcoming bookings -->
+        </div>
+      </div>
+
+      <div class="card" id="reviewsCard">
+        <div class="section-title">
+          <h2>Ratings & Reviews</h2>
+        </div>
+        <div id="reviewsList">
+          <!-- reviews feed -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FIREBASE + APP LOGIC -->
+  <script type="module">
+  // ---------- Firebase SDK (v11) via CDN ----------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, collection, query, where, getDocs, getDoc, doc, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  // ====== CONFIGURE THIS ======
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MSG_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  // ============================
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // UI elements
+  const avatarEl = document.getElementById("avatarInitial");
+  const chefNameEl = document.getElementById("chefName");
+  const chefEmailEl = document.getElementById("chefEmail");
+  const earningsTotalEl = document.getElementById("earningsTotal");
+  const ratingAvgEl = document.getElementById("ratingAvg");
+  const upcomingCountEl = document.getElementById("upcomingCount");
+  const notificationsListEl = document.getElementById("notificationsList");
+  const todayBookingsEl = document.getElementById("todayBookings");
+  const upcomingBookingsEl = document.getElementById("upcomingBookings");
+  const reviewsListEl = document.getElementById("reviewsList");
+  const todayCountEl = document.getElementById("todayCount");
+  const weekCountEl = document.getElementById("weekCount");
+  const monthEarningsEl = document.getElementById("monthEarnings");
+  const lastSeenEl = document.getElementById("lastSeen");
+  const chefLocalTimeEl = document.getElementById("chefLocalTime");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const markAllReadBtn = document.getElementById("markAllRead");
+  const viewAllBookingsBtn = document.getElementById("viewAllBookings");
+  const editProfileBtn = document.getElementById("editProfileBtn");
+  const navLogout = document.getElementById("navLogout");
+
+  // menu toggle interactions
+  const toggle = document.getElementById("menuToggle");
+  const dropdown = document.getElementById("menuDropdown");
+  toggle.addEventListener("click", () => {
+    toggle.classList.toggle("active");
+    if(toggle.classList.contains("active")) {
+      dropdown.style.display="flex";
+      dropdown.style.flexDirection="column";
+      dropdown.style.animation="dropdownOpen 0.25s forwards";
+    } else {
+      dropdown.style.animation="dropdownClose 0.25s forwards";
+      setTimeout(()=>dropdown.style.display="none",250);
+    }
+  });
+  document.addEventListener("click", (e)=> {
+    if(!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+      if(toggle.classList.contains("active")) {
+        toggle.classList.remove("active");
+        dropdown.style.animation="dropdownClose 0.25s forwards";
+        setTimeout(()=>dropdown.style.display="none",250);
+      }
+    }
+  });
+
+  // Utility: format timestamps to readable local string
+  function fmt(ts) {
+    if(!ts) return "-";
+    let d = (ts instanceof Timestamp) ? ts.toDate() : new Date(ts);
+    return d.toLocaleString(); // shows local date/time
+  }
+
+  // Date helpers
+  function isSameDay(dateA, dateB) {
+    return dateA.getFullYear() === dateB.getFullYear()
+      && dateA.getMonth() === dateB.getMonth()
+      && dateA.getDate() === dateB.getDate();
+  }
+
+  function startOfWeek(d) { // Monday start
+    const date = new Date(d);
+    const day = (date.getDay() + 6) % 7; // Mon=0
+    date.setDate(date.getDate() - day);
+    date.setHours(0,0,0,0);
+    return date;
+  }
+
+  function startOfMonth(d) {
+    const m = new Date(d);
+    m.setDate(1); m.setHours(0,0,0,0);
+    return m;
+  }
+
+  // Fetch and render data for the logged-in chef
+  async function loadChefData(user) {
+    try {
+      // 1) get chef profile doc
+      const userDocRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userDocRef);
+      if(!userSnap.exists()) {
+        alert("Profile not found in Firestore. Contact support.");
+        return;
+      }
+      const profile = userSnap.data();
+      if(profile.role !== "chef") {
+        // not a chef — redirect away
+        alert("Account is not a chef account. Redirecting to home.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      // Render profile
+      chefNameEl.textContent = profile.name || "Chef";
+      chefEmailEl.textContent = profile.email || user.email || "";
+      avatarEl.textContent = (profile.name ? profile.name.split(" ").map(s=>s[0]).slice(0,2).join("") : "C").toUpperCase();
+
+      // show last active/time
+      lastSeenEl.textContent = "Signed in as chef";
+      chefLocalTimeEl.textContent = `Local time: ${new Date().toLocaleString()}`;
+
+      // 2) query bookings where chefId == user.uid (limit recent query)
+      const bookingsCol = collection(db, "bookings");
+      const q = query(bookingsCol, where("chefId", "==", user.uid), orderBy("datetime", "asc"));
+      const snap = await getDocs(q);
+
+      const bookings = [];
+      snap.forEach(d => {
+        bookings.push({ id: d.id, ...d.data() });
+      });
+
+      // compute stats
+      const now = new Date();
+      let earningsTotal = 0;
+      let ratingSum = 0;
+      let ratingCount = 0;
+      let upcomingCount = 0;
+      let todayCount = 0;
+      let weekCount = 0;
+      let monthEarnings = 0;
+
+      const startWeek = startOfWeek(now);
+      const startMonth = startOfMonth(now);
+
+      const todayList = [];
+      const upcomingList = [];
+      const reviews = [];
+
+      bookings.forEach(b => {
+        const dt = b.datetime ? (b.datetime instanceof Timestamp ? b.datetime.toDate() : new Date(b.datetime)) : null;
+        if(b.status === "completed" && typeof b.amount === "number") {
+          earningsTotal += b.amount;
+          if(dt && dt >= startMonth) monthEarnings += b.amount;
+        }
+        if(b.rating || b.rating === 0) {
+          ratingSum += Number(b.rating);
+          ratingCount++;
+          if(b.rating && b.rating > 0) reviews.push({ rating: b.rating, note: b.review || "", customer: b.customerName || "Guest", at: dt });
+        }
+
+        if(dt) {
+          if(isSameDay(dt, now)) {
+            todayList.push(b);
+            todayCount++;
+          } else if(dt > now) {
+            upcomingList.push(b);
+            upcomingCount++;
+          }
+          if(dt >= startWeek) weekCount++;
+        }
+      });
+
+      const ratingAvg = ratingCount ? (ratingSum / ratingCount) : 0;
+
+      // render quick stats
+      earningsTotalEl.textContent = `₹${earningsTotal.toFixed(0)}`;
+      ratingAvgEl.textContent = ratingAvg ? ratingAvg.toFixed(1) : "0.0";
+      upcomingCountEl.textContent = upcomingCount;
+
+      todayCountEl.textContent = todayCount;
+      weekCountEl.textContent = weekCount;
+      monthEarningsEl.textContent = `₹${monthEarnings.toFixed(0)}`;
+
+      // render today's bookings
+      renderBookingsList(todayBookingsEl, todayList, /*showStatus*/ true);
+      renderBookingsList(upcomingBookingsEl, upcomingList, /*showStatus*/ true);
+
+      // render reviews
+      renderReviews(reviews);
+
+      // load notifications (optional)
+      await loadNotifications(user.uid);
+
+    } catch (err) {
+      console.error("Error loading chef data:", err);
+      alert("Error loading data: " + err.message);
+    }
+  }
+
+  // Render bookings helper
+  function renderBookingsList(container, arr, showStatus=false) {
+    container.innerHTML = "";
+    if(!arr.length) {
+      container.innerHTML = `<div style="color:#BFBFBF; padding:12px;">No bookings found.</div>`;
+      return;
+    }
+    arr.sort((a,b)=> {
+      const atA = a.datetime instanceof Timestamp ? a.datetime.toMillis() : (a.datetime ? new Date(a.datetime).getTime():0);
+      const atB = b.datetime instanceof Timestamp ? b.datetime.toMillis() : (b.datetime ? new Date(b.datetime).getTime():0);
+      return atA - atB;
+    });
+
+    arr.forEach(b => {
+      const dt = b.datetime ? (b.datetime instanceof Timestamp ? b.datetime.toDate() : new Date(b.datetime)) : null;
+      const wrapper = document.createElement("div");
+      wrapper.className = "booking";
+      wrapper.innerHTML = `
+        <div class="left">
+          <div style="font-weight:700; color:#D6C48C">${b.customerName || "Customer"}</div>
+          <div class="when">${dt ? dt.toLocaleString() : "—"}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="amount">₹${b.amount ?? "-"}</div>
+          ${showStatus ? `<div style="font-size:12px; color:#E8E8E8; margin-top:6px;">${b.status ?? "-"}</div>` : ""}
+        </div>
+      `;
+      container.appendChild(wrapper);
+    });
+  }
+
+  // Render reviews
+  function renderReviews(reviews) {
+    reviewsListEl.innerHTML = "";
+    if(!reviews.length) {
+      reviewsListEl.innerHTML = `<div style="color:#BFBFBF; padding:10px;">No reviews yet.</div>`;
+      return;
+    }
+    reviews.slice(0,10).forEach(r => {
+      const el = document.createElement("div");
+      el.style.padding = "12px";
+      el.style.borderRadius = "10px";
+      el.style.background = "rgba(0,0,0,0.18)";
+      el.style.marginBottom = "8px";
+      el.innerHTML = `<div style="font-weight:700; color:#D6C48C">${r.customer}</div>
+                      <div style="font-size:13px; color:#fff; margin-top:6px;">${r.note || "No comment"}</div>
+                      <div style="margin-top:8px; font-size:13px; color:#E8E8E8">Rating: ${r.rating} • ${r.at ? r.at.toLocaleString() : ""}</div>`;
+      reviewsListEl.appendChild(el);
+    });
+  }
+
+  // Load notifications for chef
+  async function loadNotifications(chefUid) {
+    try {
+      const notifsCol = collection(db, "notifications");
+      const q = query(notifsCol, where("chefId", "==", chefUid), orderBy("createdAt", "desc"), limit(50));
+      const snap = await getDocs(q);
+      const items = [];
+      snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+      notificationsListEl.innerHTML = "";
+      if(!items.length) notificationsListEl.innerHTML = `<div style="color:#BFBFBF; padding:10px">No notifications</div>`;
+      items.forEach(n => {
+        const el = document.createElement("div");
+        el.className = "notif";
+        el.innerHTML = `<div style="font-weight:700; color:#D6C48C">${n.title || "Notice"}</div><div style="font-size:13px; color:#E8E8E8; margin-top:6px;">${n.message || ""}</div><div style="font-size:12px;color:#BDBDBD;margin-top:8px">${n.createdAt ? (n.createdAt instanceof Timestamp ? n.createdAt.toDate().toLocaleString() : new Date(n.createdAt).toLocaleString()) : ""}</div>`;
+        notificationsListEl.appendChild(el);
+      });
+    } catch (err) {
+      console.error("Notification load error", err);
+    }
+  }
+
+  // auth state listener - load chef data if signed in
+  onAuthStateChanged(auth, async (user) => {
+    if(user) {
+      await loadChefData(user);
+    } else {
+      // Not signed in — redirect to sign in
+      window.location.href = "signin.html";
+    }
+  });
+
+  // UI interactions
+  refreshBtn.addEventListener("click", async ()=>{
+    const user = auth.currentUser;
+    if(user) await loadChefData(user);
+  });
+
+  markAllReadBtn.addEventListener("click", async ()=>{
+    alert("Mark-all-read action requires write rules and batch update — implement on server or use firebase client write with security rules.");
+    // Implementation note: update notifications docs setting read=true using write rules
+  });
+
+  viewAllBookingsBtn.addEventListener("click", ()=> {
+    // if you have a bookings page, redirect; else we can show all bookings inline
+    window.location.href = "bookings.html";
+  });
+
+  editProfileBtn.addEventListener("click", ()=> {
+    window.location.href = "profile.html";
+  });
+
+  navLogout.addEventListener("click", async (e)=> {
+    e.preventDefault();
+    try {
+      await signOut(auth);
+      window.location.href = "signin.html";
+    } catch(err) {
+      alert("Sign out error: " + err.message);
+    }
+  });
+
+  // OPTIONAL: Update "live" clock in header
+  setInterval(()=> {
+    chefLocalTimeEl.textContent = `Local time: ${new Date().toLocaleString()}`;
+  }, 1000);
+
+  // hide intro after animation is done
+  setTimeout(()=> { document.getElementById("intro").style.display = "none"; }, 3000);
+
+  </script>
+</body>
+</html>
+
+i want dashboard like this ui but changes like you ve changed

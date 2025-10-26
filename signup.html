@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | CHEF HOME</title>
+  <style>
+    @font-face {
+      font-family: 'milker';
+      src: url('fonts/Milker.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'lexend';
+      src: url('fonts/Lexend-VariableFont_wght.ttf') format('truetype');
+    }
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: "lexend";
+      background-image: url('NEW.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .signup-container {
+      width: 370px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+      border-radius: 25px;
+      box-shadow: 0 10px 32px rgba(157, 82, 255, 0.25);
+      padding: 40px;
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      font-family: "milker";
+      color: rgb(157, 82, 255);
+      margin-bottom: 25px;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #f3eaff;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.85);
+      outline: none;
+      color: #333;
+    }
+
+    input:focus {
+      border: 2px solid rgb(157, 82, 255);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: rgb(157, 82, 255);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: rgb(124, 56, 211);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(157, 82, 255, 0.4);
+    }
+
+    .signin-link {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #f3eaff;
+    }
+
+    .signin-link a {
+      color: rgb(157, 82, 255);
+      text-decoration: none;
+    }
+
+    .signin-link a:hover {
+      text-decoration: underline;
+    }
+
+    .back-home {
+      margin-top: 20px;
+      display: inline-block;
+      font-size: 14px;
+      color: #d4c7ff;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .back-home:hover {
+      color: rgb(157, 82, 255);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h1>Sign Up</h1>
+    <form id="signupForm">
+      <div class="input-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="Enter your full name" required />
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" required />
+      </div>
+
+      <button type="submit">Create Account</button>
+
+      <p class="signin-link">Already have an account? <a href="signin.html">Sign In</a></p>
+      <a href="index.html" class="back-home">← Back to Home</a>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!name || !email || !password) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      // Check if user already exists in localStorage
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const existingUser = users.find(user => user.email === email);
+
+      if (existingUser) {
+        alert("User already exists. Please sign in.");
+        window.location.href = "signin.html";
+        return;
+      }
+
+      // Save new user
+      users.push({ name, email, password });
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("Account created successfully! You can now sign in.");
+      window.location.href = "signin.html";
+    });
+  </script>
+</body>
+</html>
