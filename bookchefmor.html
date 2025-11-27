@@ -22,122 +22,133 @@
         padding: 0;
         min-height: 100vh;
         font-family: "lexend", sans-serif;
-        background-color: #0E0E0E;
+        background-color: rgb(228, 228, 228);
         color: #F5F5F5;
         overflow-x: hidden;
     }
 
     body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        opacity: 0.2;
-        filter: brightness(75%);
-        z-index: -1;
-        pointer-events: none;
-    }
+  content: "";
+  position: fixed;
+  bottom: -120px;  /* pushes glow slightly below */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 450px;
+  height: 450px;
+  background-color: rgb(234, 234, 234);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0.8;
+}
 
+    
     header {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        padding: 15px 35px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(30, 30, 30, 0.25);
-        backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
-        box-shadow: inset 0 0 10px rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.4), 0 0 1px rgba(255,255,255,0.1);
-        border: 1px solid rgba(214,196,140,0.15);
-        border-radius: 50px;
-        z-index: 100;
-        transition: all 0.3s ease-in-out;
-    }
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    height: 50px;
+    max-width: 1400px;
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: rgba(30, 30, 30, 0);
+        backdrop-filter: blur(60px) saturate(150%);
+        -webkit-backdrop-filter: blur(10px) saturate(150%);
+
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: 40px;
+
+    box-shadow: inset 0 0 5px rgb(255, 255, 255),
+        0 8px 32px rgba(0, 0, 0, 0.018);
+    z-index: 100;
+    transition: 0.3s ease;
+}
+
 
     header h1 {
         font-family: "milker";
-        color: #D6C48C;
+        color: #771cff;
         font-size: 32px;
         margin: 0;
         padding-top: 5px;
         letter-spacing: 1px;
     }
-    /* Glass Toggle Style */
-    .glass-toggle {
-      position: relative;
-      width: 80px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50px;
-      backdrop-filter: blur(15px) saturate(150%);
-      -webkit-backdrop-filter: blur(15px) saturate(150%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      cursor: pointer;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      transition: background 0.4s ease;
-    }
+    /* From Uiverse.io by vinodjangid07 */ 
+#checkbox {
+  display: none;
+  pointer-events: none;
 
-    .toggle-bg {
-      position: absolute;
-      inset: 0;
-      border-radius: 50px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.2));
-      box-shadow:
-        inset 0 0 10px rgba(255, 255, 255, 0.05),
-        0 8px 20px rgba(0, 0, 0, 0.4);
-    }
+}
 
-    .toggle-btn {
-      position: relative;
-      left: 5px;
-      height: 30px;
-      width: 30px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.25);
-      box-shadow:
-        0 2px 10px rgba(0, 0, 0, 0.3),
-        inset 0 0 5px rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+.toggle {
+  position: relative;
+  width: 30px;
+  margin-top: 5px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition-duration: .5s;
+}
 
-    .moon {
-      color: #D6C48C;
-      font-size: 16px;
-      pointer-events: none;
-      font-family: "milker";
-      padding-top: 5px;
-    }
+.bars {
+  width: 100%;
+  height: 4px;
+  background-color: #373737;
+  border-radius: 4px;
+}
+
+#bar2 {
+  transition-duration: .8s;
+}
+
+#bar1,#bar3 {
+  width: 70%;
+}
+
+#checkbox:checked + .toggle .bars {
+  position: absolute;
+  transition-duration: .5s;
+}
+
+#checkbox:checked + .toggle #bar2 {
+  transform: scaleX(0);
+  transition-duration: .5s;
+}
+
+#checkbox:checked + .toggle #bar1 {
+  width: 100%;
+  transform: rotate(45deg);
+  transition-duration: .5s;
+}
+
+#checkbox:checked + .toggle #bar3 {
+  width: 100%;
+  transform: rotate(-45deg);
+  transition-duration: .5s;
+}
+
+#checkbox:checked + .toggle {
+  transition-duration: .5s;
+  transform: rotate(180deg);
+}
 
     /* Active State */
-    .glass-toggle.active .toggle-btn {
-      left: 45px;
-      background: rgba(214, 196, 140, 0.35);
-      box-shadow:
-        0 4px 15px rgba(214, 196, 140, 0.4),
-        inset 0 0 10px rgba(214, 196, 140, 0.4);
-    }
-
     .dropdown {
       position: absolute;
-      top: 65px;
+      top: 100px;
       right: 35px;
-      background: rgba(30, 30, 30, 0.15);
+      background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(20px) saturate(150%);
-      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(30px) saturate(150%);
       border: 1px solid rgba(214, 196, 140, 0.15);
       border-radius: 20px;
       display: none;
@@ -148,21 +159,20 @@
       width: 180px;
       box-shadow: 
         inset 0 0 10px rgba(255, 255, 255, 0.05),
-        0 8px 32px rgba(0, 0, 0, 0.4),
-        0 0 1px rgba(255, 255, 255, 0.1);
+        0 8px 32px rgba(0, 0, 0, 0.018);
     }
 
     .dropdown a {
       text-decoration: none;
-      color: #D6C48C;
+      color: #373737;
       font-family: "lexend";
-      transition: 0.2s;
+      transition: 1.0s;
       padding-left: 20px;
       padding-top: 10px;
     }
 
     .dropdown a:hover {
-      color: #ffffff;
+      color: #771cff;
     }
     main {
         padding-top: 125px;
@@ -171,23 +181,37 @@
     }
 
     .container {
-        border-radius: 30px;
-        padding: 50px 60px;
-        width: 850px;
-        max-width: 95%;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        background: rgba(30, 30, 30, 0.4);
-        backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
-        box-shadow: inset 0 0 15px rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.4), 0 0 2px rgba(255,255,255,0.1);
-        border: 1px solid rgba(214,196,140,0.2);
-        box-sizing: border-box;
+    border-radius: 30px;
+    padding: 50px 60px;
+    width: 850px;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.012);
+    backdrop-filter: blur(90px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    box-shadow: inset 0 0 2px rgb(255, 255, 255), 0 8px 32px #771cff1a;
+    border: 1px solid #ffffff00;
+    box-sizing: border-box;
+    margin-top: -20px;
+
+    /* ✅ Animation */
+    opacity: 0;
+    transform: scale(0.92);
+    animation: popIn 0.7s cubic-bezier(0.17, 0.67, 0.26, 1.4) forwards;
+}
+
+@keyframes popIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
+}
+
 
     h2 {
-        color: #D6C48C;
+        color: #373737;
         margin-bottom: 10px;
         font-size: 22px;
         border-bottom: 1px solid rgba(214,196,140,0.3);
@@ -217,7 +241,7 @@
         font-size: 16px;
         margin-bottom: 5px;
         font-weight: 500;
-        color: #F5F5F5;
+        color: #373737;
     }
 
     input, select {
@@ -225,7 +249,7 @@
         border-radius: 12px;
         border: 1px ;
         background: rgba(255,255,255,0.05);
-        color: #F5F5F5;
+        color: #373737;
         font-size: 14px;
         outline: none;
         transition: 0.3s all ease;
@@ -233,53 +257,252 @@
     }
 
     input:focus, select:focus {
-        border: 1px solid #D6C48C;
+        border: 1px solid #373737;
         box-shadow: 0 0 8px rgba(214,196,140,0.4);
-        background: rgba(255,255,255,0.1);
+        background: #ffffff00;;
     }
 
     select {
         appearance: none;
         cursor: pointer;
-        background-image: linear-gradient(45deg, transparent 50%, #D6C48C 50%), linear-gradient(135deg, #D6C48C 50%, transparent 50%);
+        background-image: linear-gradient(45deg, transparent 50%, #771cff 50%), linear-gradient(135deg, #771cff 50%, transparent 50%);
         background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
         background-size: 5px 5px, 5px 5px;
         background-repeat: no-repeat;
     }
+    /* From Uiverse.io by Z4drus */ 
+.container1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  perspective: 800px;
+}
+
+.crystal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  opacity: 0;
+  transform-origin: bottom center;
+  transform: translate(-50%, -50%) rotateX(45deg) rotateZ(0deg);
+  animation: spin 4s linear infinite, emerge 2s ease-in-out infinite alternate,
+    fadeIn 0.3s ease-out forwards;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotateX(45deg) rotateZ(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotateX(45deg) rotateZ(360deg);
+  }
+}
+
+@keyframes emerge {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    visibility: visible;
+    opacity: 0.8;
+  }
+}
+
+.crystal:nth-child(1) {
+  background: linear-gradient(45deg, #003366, #336699);
+  animation-delay: 0s;
+}
+
+.crystal:nth-child(2) {
+  background: linear-gradient(45deg, #003399, #3366cc);
+  animation-delay: 0.3s;
+}
+
+.crystal:nth-child(3) {
+  background: linear-gradient(45deg, #0066cc, #3399ff);
+  animation-delay: 0.6s;
+}
+
+.crystal:nth-child(4) {
+  background: linear-gradient(45deg, #0099ff, #66ccff);
+  animation-delay: 0.9s;
+}
+
+.crystal:nth-child(5) {
+  background: linear-gradient(45deg, #33ccff, #99ccff);
+  animation-delay: 1.2s;
+}
+
+.crystal:nth-child(6) {
+  background: linear-gradient(45deg, #66ffff, #ccffff);
+  animation-delay: 1.5s;
+}
+  /* Fullscreen wrapper for loader */
+#loader-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: white; /* change if you want */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+
 
     .next {
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 15px;
-      background: rgba(30, 30, 30, 0.3);
-      backdrop-filter: blur(12px);
-      color: #F5F5F5;
-      font-family: "milker";
-      font-size: 18px;
-      cursor: pointer;
-      box-shadow: 0 5px 25px rgba(73, 58, 12, 0.3);
-      transition: all 0.3s ease-in-out;
-      padding-top: 5px;
-      width: 100px;
-      height: 40px;
-      align-self: flex-end;
-    }
+  background: #771cff;
+  color: white;
+  font-family: inherit;
+  padding: 0.35em;
+  padding-left: 1.2em;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 1.6em -0.6em #714da6;
+  overflow: hidden;
+  position: relative;
+  height: 2.8em;
+  padding-right: 3.3em;
+  cursor: pointer;
+  margin-left: 610px;
+}
 
-    .next a {
-      text-decoration: none;
-      color: #D6C48C;
-      transition: all 0.3s ease-in-out;
-    }
+.next .icon {
+  background: white;
+  margin-left: 1em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2.2em;
+  border-radius: 0.7em;
+  box-shadow: 0.1em 0.1em 0.6em 0.2em #7b52b9;
+  right: 0.3em;
+  transition: all 0.3s;
+}
 
-    .next:hover {
-      transform: translateY(-5px);
-      background: rgba(0, 0, 0, 0.25);
-      box-shadow: 0 10px 35px rgba(0, 122, 0, 0.4);
-      border: 1px solid rgba(38, 255, 0, 0.3);
-    }
+.next:hover .icon {
+  width: calc(100% - 0.6em);
+}
 
-    .next:hover a {
-      color: #12c50b;
+.next .icon svg {
+  width: 1.1em;
+  transition: transform 0.3s;
+  color: #7b52b9;
+}
+
+.next:hover .icon svg {
+  transform: translateX(0.1em);
+}
+#menuDropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 60px;   /* adjust if needed */
+  background: rgba(255, 255, 255, 0);
+  width: 200px;
+  flex-direction: column;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  box-shadow: inset 0 0 5px rgb(255, 255, 255),
+        0 8px 32px rgba(0, 0, 0, 0.018);
+}
+@font-face {
+    font-family: 'Milker';
+    src: url('fonts/Milker.otf') format('opentype');
+}
+
+.scrolling-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 50px;
+    overflow: hidden;
+}
+
+.scroll-row {
+    display: flex;
+    width: max-content;
+    animation: scrollX 40s linear infinite;
+}
+
+.scroll-row.reverse {
+    animation-direction: reverse;
+}
+
+.scroll-row div {
+    display: flex;
+}
+
+.scroll-row span {
+    font-family: 'Milker', sans-serif;
+    font-size: 120px;
+    color: #373737;
+    opacity: 0.15;
+    padding-right: 120px;
+    white-space: nowrap;
+}
+
+@keyframes scrollX {
+    from {
+        transform: translateX(0);
     }
+    to {
+        transform: translateX(-50%);
+    }
+}
+#getOtpBtn,#verifyOtpBtn,#resendBtn{
+  height: 20px;
+  width: 70px;
+  background-color: #771cff;
+  color: white;
+  border: 1px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: "lexend";
+  padding-top: 3px;
+}
+
+
+
+
+.next:active .icon {
+  transform: scale(0.95);
+}
     @keyframes dropdownOpen {
       0% { opacity: 0; transform: translateY(-8px); }
       100% { opacity: 1; transform: translateY(0); }
@@ -304,7 +527,7 @@
         }
         header h1 { font-size: 28px; }
         h2 { font-size: 20px; }
-        .row { gap: 15px; }
+        .row { gap: 15px;  }
         .next { width: 90px; height: 38px; font-size: 16px; }
     }
 
@@ -328,15 +551,62 @@
 </style>
 </head>
 <body>
-<header>
-    <h1>CHEF HOME</h1>
-    <!-- Glass Toggle -->
-    <div class="glass-toggle" id="menuToggle">
-      <div class="toggle-bg"></div>
-      <div class="toggle-btn">
-        <span class="moon">M</span>
-      </div>
+  <!-- From Uiverse.io by Z4drus --> 
+<!-- LOADER (Only shows while loading) -->
+<div id="loader-screen">
+  <div class="container">
+    <div class="loader">
+      <div class="crystal"></div>
+      <div class="crystal"></div>
+      <div class="crystal"></div>
+      <div class="crystal"></div>
+      <div class="crystal"></div>
+      <div class="crystal"></div>
     </div>
+  </div>
+</div>
+<div class="scrolling-bg">
+
+    <div class="scroll-row">
+        <div>
+            <span>ChefHome ChefHome ChefHome ChefHome</span>
+        </div>
+        <div>
+            <span>ChefHome ChefHome ChefHome ChefHome</span>
+        </div>
+    </div>
+
+    <div class="scroll-row reverse">
+        <div>
+            <span>ChefHome ChefHome ChefHome ChefHome</span>
+        </div>
+        <div>
+            <span>ChefHome ChefHome ChefHome ChefHome</span>
+        </div>
+    </div>
+
+    <div class="scroll-row">
+        <div>
+            <span>ChefHome ChefHome ChefHome ChefHome</span>
+        </div>
+        <div>
+            <span>ChefHome ChefHome ChefHome ChefHome</span>
+        </div>
+    </div>
+
+</div>
+
+
+
+<header>
+    <h1>CHEFHOME</h1>
+    <!-- Menu --> 
+    <input type="checkbox" id="checkbox">
+    <label for="checkbox" class="toggle">
+        <div class="bars" id="bar1"></div>
+        <div class="bars" id="bar2"></div>
+        <div class="bars" id="bar3"></div>
+    </label>
 
     <div class="dropdown" id="menuDropdown">
       <a href="history.html">History</a>
@@ -350,18 +620,27 @@
         <h2>Personal Details</h2>
         <form id="signinForm">
             <div class="row">
-                <div>
+                <div class="inputBox">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" placeholder="Enter your name" required>
                 </div>
-                <div>
+                <div class="inputBox">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" placeholder="Enter your phone" required>
+                    <input type="tel" id="phone" placeholder="Enter Phone Number" maxlength="10" required>
+                    <button id="getOtpBtn" disabled>Get OTP</button>
+
+                    <div id="otpSection" style="display:none; margin-top:10px;">
+                        <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" required>
+                        <button id="verifyOtpBtn">Verify OTP</button>
+                        <p id="otpMsg" style="color:yellow;"></p>
+                        <button id="resendBtn" style="display:none;">Resend OTP</button>
                 </div>
+                </div>
+
             </div>
             <h2>Address Details</h2>
             <div class="row">
-                <div>
+                <div class="inputBox">
                     <label for="state">State</label>
                     <select id="state" required>
                         <option value="">Select State</option> 
@@ -403,58 +682,172 @@
                         <option value="west-bengal">West Bengal</option>
                     </select>
                 </div>
-                <div>
+                <div class="inputBox">
                     <label for="district">District</label>
                     <input type="text" id="district" placeholder="Enter district" required>
                 </div>
             </div>
             <div class="row">
-                <div>
+                <div class="inputBox">
                     <label for="city">City</label>
                     <input type="text" id="city" placeholder="Enter city" required>
                 </div>
             </div>
             <div class="row">
-                <div>
+                <div >
                     <label for="address">Door No. & Landmark</label>
                     <input type="text" id="address" placeholder="Enter full address" required>
                 </div>
             </div>
-            <button type="submit" class="next">
-                <a href="step2.html">Next</a>
-            </button>
+            <button class="next" >
+                Next
+                <div class="icon">
+                    <svg
+                    height="24"
+                    width="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    >
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                        fill="currentColor"
+                    ></path>
+                    </svg>
+                </div>
+                </button>
+
         </form>
     </div>
 </main>
 <script>
-  setTimeout(() => {
-    document.getElementById("intro").style.display = "none";
-  }, 3000);
+document.addEventListener("DOMContentLoaded", () => {
 
-  const toggle = document.getElementById("menuToggle");
+  // ✅ Existing menu + loader code (untouched)
+  const checkbox = document.getElementById("checkbox");
+  const toggleBtn = document.querySelector(".toggle");
   const dropdown = document.getElementById("menuDropdown");
 
-  toggle.addEventListener("click", () => {
-    toggle.classList.toggle("active");
-    if (toggle.classList.contains("active")) {
-      dropdown.style.display = "flex";
-      dropdown.style.animation = "dropdownOpen 0.25s forwards";
-    } else {
-      dropdown.style.animation = "dropdownClose 0.25s forwards";
-      setTimeout(() => (dropdown.style.display = "none"), 250);
-    }
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loader-screen");
+    loader.style.opacity = "0";
+    loader.style.transition = "0.5s";
+    setTimeout(() => loader.style.display = "none", 500);
+  });
+
+  function openMenu() {
+    dropdown.style.display = "flex";
+    dropdown.style.animation = "dropdownOpen 0.25s forwards";
+  }
+
+  function closeMenu() {
+    dropdown.style.animation = "dropdownClose 0.25s forwards";
+    setTimeout(() => dropdown.style.display = "none", 230);
+  }
+
+  toggleBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    checkbox.checked = !checkbox.checked;
+    checkbox.checked ? openMenu() : closeMenu();
   });
 
   document.addEventListener("click", (e) => {
-    if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
-      if (toggle.classList.contains("active")) {
-        toggle.classList.remove("active");
-        dropdown.style.animation = "dropdownClose 0.25s forwards";
-        setTimeout(() => (dropdown.style.display = "none"), 250);
-      }
+    if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      checkbox.checked = false;
+      closeMenu();
     }
   });
-  </script>
 
+  // ✅ OTP Logic Starts Here
+  const phoneInput = document.getElementById("phone");
+  const getOtpBtn = document.getElementById("getOtpBtn");
+  const otpSection = document.getElementById("otpSection");
+  const otpInput = document.getElementById("otpInput");
+  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const otpMsg = document.getElementById("otpMsg");
+  const resendBtn = document.getElementById("resendBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  let generatedOTP = "";
+  let isOtpVerified = false;
+
+  // Enable Get OTP only if phone number is 10 digits
+  phoneInput.addEventListener("input", () => {
+    getOtpBtn.disabled = phoneInput.value.length === 10 ? false : true;
+  });
+
+  // Generate OTP
+  getOtpBtn.addEventListener("click", () => {
+    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log("OTP Sent:", generatedOTP);
+    otpSection.style.display = "block";
+    otpMsg.style.color = "#373737";
+    otpMsg.innerText = "✅ OTP Sent to your phone!";
+    resendBtn.style.display = "none";
+    nextBtn.disabled = true;
+  });
+
+  // Verify OTP
+  verifyOtpBtn.addEventListener("click", () => {
+    if (otpInput.value === generatedOTP) {
+      isOtpVerified = true;
+      otpMsg.style.color = "373737";
+      otpMsg.innerText = "✅ OTP Verified Successfully!";
+      nextBtn.disabled = false; // Only now Next is enabled
+    } else {
+      isOtpVerified = false;
+      otpMsg.style.color = "373737";
+      otpMsg.innerText = "❌ Wrong OTP! Try again.";
+      resendBtn.style.display = "inline-block";
+      nextBtn.disabled = true;
+    }
+  });
+
+  // Resend OTP
+  resendBtn.addEventListener("click", () => {
+    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log("Resent OTP:", generatedOTP);
+    otpMsg.style.color = "373737";
+    otpMsg.innerText = "OTP Resent! Check again.";
+    nextBtn.disabled = true;
+  });
+
+  // ✅ Modified Next button logic (Only works if OTP is verified + all required fields filled)
+  nextBtn.addEventListener("click", (e) => {
+    const inputs = document.querySelectorAll("input[required]");
+    let allFilled = true;
+
+    inputs.forEach(input => {
+      if (input.value.trim() === "") {
+        allFilled = false;
+        input.style.border = "2px solid red";
+      } else {
+        input.style.border = "1px solid rgba(255,255,255,0.2)";
+      }
+    });
+
+    if (!allFilled) {
+      alert("⚠ Please fill all fields before proceeding!");
+      return;
+    }
+
+    if (!isOtpVerified) {
+      alert("⚠ Please verify OTP to continue!");
+      return;
+    }
+
+    window.location.href = "step2.html"; // ✅ Finally allow navigation
+  });
+
+  // Remove red border on typing
+  document.querySelectorAll("input").forEach(input => {
+    input.addEventListener("input", () => {
+      input.style.border = "1px solid rgba(255,255,255,0.2)";
+    });
+  });
+
+});
+</script>
 </body>
 </html>
