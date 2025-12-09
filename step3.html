@@ -454,35 +454,70 @@
     </div>
 </main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkboxes = document.querySelectorAll('input[name="menu_item"]');
-        const chefFeeElement = document.getElementById('chefFee');
-        const itemsTotalElement = document.getElementById('itemsTotal');
-        const finalTotalElement = document.getElementById('finalTotal');
-        const menuForm = document.getElementById('menuForm');
+<script type="module">
 
-        const chefFee = parseInt(chefFeeElement.textContent) || 399;
+/* ---------------------------------------------------------
+   FIREBASE IMPORTS
+--------------------------------------------------------- */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { 
+    getFirestore, collection, addDoc, serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { 
+    getDatabase, ref, push 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-        function updatePriceSummary() {
-            let itemsTotal = 0;
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    itemsTotal += parseInt(checkbox.value) || 0; 
-                }
-            });
+/* ---------------------------------------------------------
+   FIREBASE CONFIG
+--------------------------------------------------------- */
+const firebaseConfig = {
+    apiKey: "AIzaSyDv-jV2uHrp8Xchmr3u540J6xmWK8PZEec",
+    authDomain: "login-c2893.firebaseapp.com",
+    projectId: "login-c2893",
+    storageBucket: "login-c2893.firebasestorage.app",
+    messagingSenderId: "848550093693",
+    appId: "1:848550093693:web:b1142db0e0aa38f8afe214",
+    databaseURL: "https://login-c2893-default-rtdb.firebaseio.com"
+};
 
-            const finalTotal = itemsTotal + chefFee;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const rtdb = getDatabase(app);
 
-            itemsTotalElement.textContent = itemsTotal;
-            finalTotalElement.textContent = finalTotal;
-        }
+/* ---------------------------------------------------------
+   MAIN STEP3 LOGIC
+--------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', function() {
 
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updatePriceSummary);
+    const checkboxes = document.querySelectorAll('input[name="menu_item"]');
+    const chefFeeElement = document.getElementById('chefFee');
+    const itemsTotalElement = document.getElementById('itemsTotal');
+    const finalTotalElement = document.getElementById('finalTotal');
+    const menuForm = document.getElementById('menuForm');
+
+    const chefFee = parseInt(chefFeeElement.textContent) || 399;
+
+    function updatePriceSummary() {
+        let itemsTotal = 0;
+
+        checkboxes.forEach(cb => {
+            if (cb.checked) itemsTotal += parseInt(cb.value) || 0;
         });
-        
-        menuForm.addEventListener('submit', function(e) {
+
+        const finalTotal = itemsTotal + chefFee;
+
+        itemsTotalElement.textContent = itemsTotal;
+        finalTotalElement.textContent = finalTotal;
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updatePriceSummary));
+
+    updatePriceSummary();
+
+    /* ---------------------------------------------------------
+       SUBMIT → SAVE ORDER + SEND NOTIFICATION
+    --------------------------------------------------------- */
+    menuForm.addEventListener("submit", async function(e) {
         e.preventDefault();
 
         const selectedItems = Array.from(checkboxes)
@@ -492,15 +527,66 @@
                 price: parseInt(cb.value)
             }));
 
-        // Calculate items total
         const itemsTotal = selectedItems.reduce((sum, item) => sum + item.price, 0);
-
-        const chefFee = parseInt(chefFeeElement.textContent) || 399;
-        const finalTotal = chefFee + itemsTotal;
-
+        const finalTotal = itemsTotal + chefFee;
         const specialInstructions = document.getElementById('specialInstructions').value;
 
-        // Save **everything** to localStorage
+        const bookingServiceType = localStorage.getItem("bookingServiceType");
+        const bookingDate = localStorage.getItem("bookingDate");
+        const bookingTime = localStorage.getItem("bookingTime");
+        const chefId = localStorage.getItem("bookingChefId");
+        const chefName = localStorage.getItem("bookingChefName");
+        const userName = localStorage.getItem("userName") || "Customer";
+        const userId = localStorage.getItem("userId") || "NA";
+        const userPhone = localStorage.getItem("userPhone") || "NA";
+        const userArea = localStorage.getItem("userArea") || "";
+        const userCity = localStorage.getItem("userCity") || "";
+
+        if (!chefId) {
+            alert("No chef selected. Please go back to Step 2.");
+            return;
+        }
+
+        /* ---------------------------------------------------------
+           SAVE BOOKING TO FIRESTORE
+        --------------------------------------------------------- */
+        await addDoc(collection(db, "bookings"), {
+    chefId,
+    chefName,
+    customerId: userId,
+    customerName: userName,
+    customerPhone: userPhone,
+    serviceType: bookingServiceType,
+    date: bookingDate,
+    time: bookingTime,
+    items: selectedItems,
+    itemsTotal,
+    chefFee,
+    finalTotal,
+    specialInstructions,
+    area: userArea,
+    city: userCity,
+    status: "pending",
+    datetime: serverTimestamp(),
+    createdAt: serverTimestamp()
+});
+
+
+        /* ---------------------------------------------------------
+           SEND REALTIME NOTIFICATION TO CHEF DASHBOARD
+        --------------------------------------------------------- */
+        push(ref(rtdb, "orders"), {
+            chefId: chefId,
+            customerName: userName,
+            date: bookingDate,
+            time: bookingTime,
+            status: "new",
+            createdAt: Date.now()
+        });
+
+        /* ---------------------------------------------------------
+           SAVE ORDER LOCALLY FOR PAYMENT PAGE
+        --------------------------------------------------------- */
         localStorage.setItem('orderData', JSON.stringify({
             chefFee,
             itemsTotal,
@@ -509,14 +595,12 @@
             specialInstructions
         }));
 
-        // Navigate to payment page
-        window.location.href = 'payment.html';
+        window.location.href = "payment.html";
     });
+});
 
-
-        updatePriceSummary();
-    });
 </script>
 
 </body>
 </html>
+
