@@ -22,74 +22,65 @@
         -webkit-tap-highlight-color: transparent;
     }
     body {
-        height: 100%;
+        position: relative;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
         font-family: "lexend", sans-serif;
-        background-color: #0E0E0E;
+        background-color: rgb(228, 228, 228);
         color: #F5F5F5;
         overflow-x: hidden;
-        position: relative;
     }
 
-    /* Full-page background */
     body::before {
-        content: "";
-        position: absolute; /* Covers full viewport */
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        opacity: 0.2;
-        filter: brightness(75%);
-        z-index: -1;
-        
-    }
+  content: "";
+  position: fixed;
+  bottom: -120px;  /* pushes glow slightly below */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 450px;
+  height: 450px;
+  background-color: rgb(234, 234, 234);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0.8;
+}
 
-    /* Glass navbar */
+    
     header {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        padding: 15px 35px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    height: 50px;
+    max-width: 1400px;
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-        background: rgba(30, 30, 30, 0.25);
-        backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
-        
-        box-shadow: 
-            inset 0 0 10px rgba(255, 255, 255, 0.05),
-            0 8px 32px rgba(0, 0, 0, 0.4),
-            0 0 1px rgba(255, 255, 255, 0.1);
-        
-        border: 1px solid rgba(214, 196, 140, 0.15);
-        border-radius: 50px;
-        
-        z-index: 100;
-        transition: all 0.3s ease-in-out;
-    }
-    header:hover {
-        background: rgba(40, 40, 40, 0.35);
-        box-shadow: 
-            inset 0 0 15px rgba(255, 255, 255, 0.1),
-            0 12px 40px rgba(214, 196, 140, 0.5),
-            0 0 2px rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(214, 196, 140, 0.25);
-    }
+    background: rgba(30, 30, 30, 0);
+        backdrop-filter: blur(60px) saturate(150%);
+        -webkit-backdrop-filter: blur(10px) saturate(150%);
+
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: 40px;
+
+    box-shadow: inset 0 0 5px rgb(255, 255, 255),
+        0 8px 32px rgba(0, 0, 0, 0.018);
+    z-index: 100;
+    transition: 0.3s ease;
+}
+
 
     header h1 {
         font-family: "milker";
-        color: #D6C48C;
+        color: #771cff;
         font-size: 32px;
         margin: 0;
+        padding-top: 5px;
         letter-spacing: 1px;
     }
 
@@ -101,26 +92,24 @@
     }
 
     .container {
-        border-radius: 30px;
-        padding: 50px 60px;
-        width: 850px;
-        max-width: 95%;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        margin-top: 50px;
-        background: rgba(30,30,30,0.25);
-        backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
-        box-shadow: 
-            inset 0 0 10px rgba(255,255,255,0.05),
-            0 8px 32px rgba(0,0,0,0.4),
-            0 0 1px rgba(255,255,255,0.1);
-        border: 1px solid rgba(214,196,140,0.15);
+    border-radius: 30px;
+    padding: 50px 60px;
+    width: 850px;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.183);
+    backdrop-filter: blur(90px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    box-shadow: inset 0 0 2px rgb(255, 255, 255), 0 8px 32px #771cff1a;
+    border: 1px solid #ffffff00;
+    box-sizing: border-box;
+    margin-top: -20px;
     }
 
     h2 {
-        color: #D6C48C;
+        color: #771cff;
         margin-bottom: 10px;
         font-size: 22px;
         border-bottom: 1px solid rgba(214,196,140,0.3);
@@ -150,7 +139,7 @@
         font-size: 16px;
         margin-bottom: 5px;
         font-weight: 500;
-        color: #F5F5F5;
+        color: black;
     }
 
     input, select {
@@ -158,23 +147,24 @@
         border-radius: 12px;
         border: 1px ;
         background: rgba(255,255,255,0.05);
-        color: #F5F5F5;
+        color: #000000;
         font-size: 14px;
         outline: none;
         transition: 0.3s all ease;
+        margin-top: 20px;
     }
 
     input:focus, select:focus {
-        border: 1px solid #D6C48C;
-        box-shadow: 0 0 8px rgba(214,196,140,0.4);
+        border: 1px solid #771cff;
+        box-shadow: 0 0 8px rgba(179, 140, 214, 0.4);
         background: rgba(255,255,255,0.1);
     }
 
     select {
         appearance: none;
         cursor: pointer;
-        background-image: linear-gradient(45deg, transparent 50%, #D6C48C 50%),
-                          linear-gradient(135deg, #D6C48C 50%, transparent 50%);
+        background-image: linear-gradient(45deg, transparent 50%, #771cff 50%),
+                          linear-gradient(135deg, #771cff 50%, transparent 50%);
         background-position: calc(100% - 20px) calc(1em + 2px),
                              calc(100% - 15px) calc(1em + 2px);
         background-size: 5px 5px, 5px 5px;
@@ -222,22 +212,128 @@
         background: rgba(0, 0, 0, 0.5);
     }
 
-    /* Flatpickr glass style overrides */
-    .flatpickr-calendar {
-        background: rgba(255, 255, 255, 0.08) !important;
-        backdrop-filter: blur(20px) saturate(180%) !important;
-        border: 1px solid rgba(214,196,140,0.2) !important;
-        color: #F5F5F5 !important;
-    }
-    .flatpickr-day.selected,
-    .flatpickr-day:hover {
-        background: rgba(214,196,140,0.7) !important;
-        color: #0E0E0E !important;
-    }
-    .flatpickr-months .flatpickr-prev-month,
-    .flatpickr-months .flatpickr-next-month {
-        color: #473602 !important;
-    }
+    /* ---------- CUSTOM FLATPICKR STYLING (GLASS UI) ---------- */
+.flatpickr-calendar {
+    border-radius: 25px !important;
+    padding: 10px !important;
+    color: #771cff;
+    width: 330px;
+    background: rgba(255, 255, 255, 0.406) !important;
+    backdrop-filter: blur(90px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+    box-shadow: inset 0 0 2px rgb(255, 255, 255), 0 8px 32px #771cff1a !important;
+    border: 1px solid #ffffff00 !important;
+}
+.flatpickr-month,.flatpickr-monthDropdown-months{
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0) !important;
+    color: #771cff !important;
+}
+.flatpickr-monthDropdown-month{
+    border-radius:10px ;
+}
+.flatpickr-day.selected{
+    border-color: #00000000 !important;
+
+}
+body .flatpickr-calendar .flatpickr-day.startRange,
+body .flatpickr-calendar .flatpickr-day.endRange,
+body .flatpickr-calendar .flatpickr-day.inRange {
+    box-shadow: none !important;
+}
+
+
+/* Month + Year text */
+.flatpickr-current-month {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+}
+
+/* Month navigation arrows */
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+    fill: #771cff !important;
+    width: 18px;
+    height: 18px;
+    padding-top: 10px;
+    padding-left: -20px;
+
+}
+.flatpickr-day.flatpickr-disabled{
+    color: #00000066 !important;
+}
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg {
+    fill: #a782ff !important;
+}
+.numInputWrapper{
+    color: #771cff !important;
+}
+.arrowUp,.arrowDown{
+    color: #771cff !important;
+}
+/* Day cells */
+.flatpickr-day {
+    border-radius: 12px !important;
+    transition: 0.25s;
+    color: #010101;
+}
+
+.flatpickr-weekdays{
+    
+    border-radius: 10px;
+}
+.flatpickr-calendar .flatpickr-weekdays .flatpickr-weekday{
+    background-color: #771cff !important;
+    color: white !important;
+    padding-top: 6px;
+    height: 20px;
+    border-radius: 10px;
+    opacity: 100% !important;
+    
+}
+.flatpickr-day.nextMonthDay{
+    color: #a264ff;
+}
+.flatpickr-weekdaycontainer{
+    color: white !important;
+    background-color: #771cff;
+    border-radius: 10px;
+}
+/* Hover effect */
+.flatpickr-day:hover {
+    background: rgba(119, 28, 255, 0.18) !important;
+    color: #000000 !important;
+    border: 1px;
+}
+
+/* Selected date */
+.flatpickr-day.selected {
+    background: #771cff !important;
+    color: white !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 12px #771cffaa !important;
+}
+
+/* Today highlight */
+.flatpickr-day.today {
+    border: 1px solid #771cff !important;
+}
+
+/* Weekday text */
+.flatpickr-weekday {
+    color: #000 !important;
+    opacity: 0.6 !important;
+    font-weight: 600 !important;
+}
+
+/* Input glow when flatpickr is open */
+.flatpickr-input:focus {
+    border: 1px solid #771cff !important;
+    box-shadow: 0 0 10px #771cff80 !important;
+}
+
     @media (max-width: 600px) {
     .container {
         padding: 30px 20px;
@@ -312,92 +408,187 @@
 
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    flatpickr("#date", {
-        dateFormat: "Y-m-d",
-        minDate: "today",
-        disableMobile: true
-    });
+<script type="module">
+// ------------------ Flatpickr ------------------
+flatpickr("#date", {
+    dateFormat: "d-m-Y",
+    minDate: "today",
+    disableMobile: true
+});
 
-    const serviceSelect = document.getElementById('state');
-    const timeslotSelect = document.getElementById('timesl');
-    const chefsRow = document.getElementById('chefsRow');
-    let selectedChef = null;
+// ------------------ DOM Elements ------------------
+const serviceSelect = document.getElementById('state');
+const dateInput = document.getElementById("date");
+const timeSelect = document.getElementById('timesl');
+const chefsRow = document.getElementById('chefsRow');
+const formEl = document.getElementById('signinForm');
 
-    const timeSlots = {
-        "Morning": ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM"],
-        "Afternoon": ["12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"],
-        "Evening": ["5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"]
-    };
+let selectedChef = null;
 
-    const chefs = [
-        {name: "Chef A", rating: 4.8, available: {"Morning": ["7:00 AM","9:00 AM"], "Afternoon": ["12:00 PM"]}},
-        {name: "Chef B", rating: 4.5, available: {"Morning": ["8:00 AM"], "Evening": ["5:00 PM","7:00 PM"]}},
-        {name: "Chef C", rating: 4.9, available: {"Afternoon": ["1:00 PM","2:00 PM"], "Evening": ["6:00 PM"]}},
-        {name: "Chef D", rating: 4.2, available: {"Morning": ["10:00 AM"], "Afternoon": ["3:00 PM"], "Evening": ["8:00 PM"]}},
-        {name: "Chef E", rating: 4.7, available: {"Morning": ["7:00 AM","10:00 AM"], "Evening": ["6:00 PM"]}}
-    ];
+// ------------------ Time Slot Map ------------------
+const timeSlots = {
+    "Morning": ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM"],
+    "Afternoon": ["12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"],
+    "Evening": ["5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"]
+};
 
-    timeslotSelect.disabled = true;
+timeSelect.disabled = true;
 
-    serviceSelect.addEventListener('change', () => {
-        const selectedService = serviceSelect.value;
-        timeslotSelect.innerHTML = '<option value="">Select Time Slot</option>';
+// ------------------ When service selected ------------------
+serviceSelect.addEventListener('change', () => {
+    const s = serviceSelect.value;
+    timeSelect.innerHTML = '<option value="">Select Time Slot</option>';
 
-        if (timeSlots[selectedService]) {
-            timeslotSelect.disabled = false;
-            timeSlots[selectedService].forEach(time => {
-                const option = document.createElement('option');
-                option.value = time;
-                option.textContent = time;
-                timeslotSelect.appendChild(option);
+    if (timeSlots[s]) {
+        timeSelect.disabled = false;
+        timeSlots[s].forEach(time => {
+            const opt = document.createElement('option');
+            opt.value = time;
+            opt.textContent = time;
+            timeSelect.appendChild(opt);
+        });
+    } else {
+        timeSelect.disabled = true;
+    }
+
+    chefsRow.innerHTML = '<div class="chef-card">Select service & time to see available chefs</div>';
+    selectedChef = null;
+});
+
+// ------------------ Helper: Convert Time ------------------
+function convertToMinutes(t) {
+    if (!t) return null;
+    const [time, mod] = t.split(" ");
+    let [h, m] = time.split(":").map(Number);
+    if (mod === "PM" && h !== 12) h += 12;
+    if (mod === "AM" && h === 12) h = 0;
+    return h * 60 + m;
+}
+
+// ------------------ FIREBASE ------------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDv-jV2uHrp8Xchmr3u540J6xmWK8PZEec",
+  authDomain: "login-c2893.firebaseapp.com",
+  projectId: "login-c2893",
+  storageBucket: "login-c2893.firebasestorage.app",
+  messagingSenderId: "848550093693",
+  appId: "1:848550093693:web:b1142db0e0aa38f8afe214"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ------------------ Fetch Chefs ------------------
+timeSelect.addEventListener("change", async () => {
+
+    chefsRow.innerHTML = "<div class='chef-card'>Loading chefs...</div>";
+    selectedChef = null;
+
+    const selectedService = serviceSelect.value;
+    const selectedDate = dateInput.value;
+    const selectedTime = timeSelect.value;
+
+    if (!selectedService || !selectedDate || !selectedTime) {
+        chefsRow.innerHTML = "<div class='chef-card'>Please select service type, date & time.</div>";
+        return;
+    }
+
+    const selectedTimeMin = convertToMinutes(selectedTime);
+    if (selectedTimeMin === null) {
+        chefsRow.innerHTML = "<div class='chef-card'>Invalid time selected.</div>";
+        return;
+    }
+
+    const userCity = (localStorage.getItem("userCity") || "").trim().toLowerCase();
+
+    if (!userCity) {
+        chefsRow.innerHTML = "<div class='chef-card'>Complete Step 1 first.</div>";
+        return;
+    }
+
+    const snapshot = await getDocs(collection(db, "chefs"));
+
+    chefsRow.innerHTML = "";
+    let found = false;
+
+    snapshot.forEach(doc => {
+        const chef = doc.data();
+        const chefId = doc.id;
+
+        if (!chef || chef.role !== "chef") return;
+        if (!chef.isAvailable) return;
+        if (chef.onLeave) return;
+
+        const chefArea = (chef.area || "").trim().toLowerCase();
+        if (chefArea !== userCity) return;
+
+        let valid = false;
+        let delay = null;
+
+        (chef.slots || []).forEach(slot => {
+            const [start, end] = slot.split(",").map(t => t.trim());
+            const sMin = convertToMinutes(start);
+            const eMin = convertToMinutes(end);
+
+            if (selectedTimeMin >= sMin && selectedTimeMin <= eMin) valid = true;
+            else if (selectedTimeMin < sMin && sMin - selectedTimeMin <= 10) delay = sMin - selectedTimeMin;
+        });
+
+        // ----- Available Chef Card -----
+        if (valid) {
+            found = true;
+            const card = document.createElement("div");
+            card.className = "chef-card";
+            card.innerHTML = `<strong>${chef.name}</strong><br>Available ✔`;
+
+            card.addEventListener("click", () => {
+                document.querySelectorAll(".chef-card").forEach(c => c.classList.remove("selected"));
+                card.classList.add("selected");
+                selectedChef = { id: chefId, name: chef.name, area: chef.area };
             });
-        } else {
-            timeslotSelect.disabled = true;
+
+            chefsRow.appendChild(card);
         }
-
-        chefsRow.innerHTML = '<div class="chef-card">Select service & time to see available chefs</div>';
-        selectedChef = null;
-    });
-
-    timeslotSelect.addEventListener('change', () => {
-        const selectedService = serviceSelect.value;
-        const selectedTime = timeslotSelect.value;
-        chefsRow.innerHTML = "";
-        selectedChef = null;
-
-        const availableChefs = chefs.filter(chef => 
-            chef.available[selectedService]?.includes(selectedTime)
-        );
-
-        if (availableChefs.length === 0) {
-            chefsRow.innerHTML = '<div class="chef-card">No chefs available</div>';
-        } else {
-            availableChefs.forEach(chef => {
-                const div = document.createElement('div');
-                div.classList.add('chef-card');
-                div.innerHTML = `<strong>${chef.name}</strong><br>Rating: ${chef.rating} ⭐`;
-                div.addEventListener('click', () => {
-                    document.querySelectorAll('.chef-card.selected').forEach(card => {
-                        card.classList.remove('selected');
-                    });
-                    div.classList.add('selected');
-                    selectedChef = chef;
-                });
-                chefsRow.appendChild(div);
-            });
+        // ----- Delay Chef Card -----
+        else if (delay !== null) {
+            found = true;
+            const card = document.createElement("div");
+            card.className = "chef-card";
+            card.style.opacity = "0.5";
+            card.style.pointerEvents = "none";
+            card.innerHTML = `<strong>${chef.name}</strong><br>Available in ${delay} mins ⏳`;
+            chefsRow.appendChild(card);
         }
     });
 
-    document.getElementById('signinForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (!selectedChef) {
-            alert("Please select a chef before proceeding!");
-            return;
-        }
-        console.log("Selected Chef:", selectedChef);
-        window.location.href = 'step3.html';
-    });
+    if (!found) {
+        chefsRow.innerHTML = "<div class='chef-card'>No chefs available</div>";
+    }
+});
+
+// ------------------ Submit ------------------
+formEl.addEventListener("submit", e => {
+    e.preventDefault();
+
+    if (!selectedChef) {
+        alert("Select a chef before continuing!");
+        return;
+    }
+
+    localStorage.setItem("bookingServiceType", serviceSelect.value);
+    localStorage.setItem("bookingDate", dateInput.value);
+    localStorage.setItem("bookingTime", timeSelect.value);
+    localStorage.setItem("bookingChefId", selectedChef.id);
+    localStorage.setItem("bookingChefName", selectedChef.name);
+
+    window.location.href = "step3.html";
+});
 </script>
+
+
 </body>
 </html>
+
