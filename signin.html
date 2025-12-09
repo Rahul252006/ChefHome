@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="main.js" defer type="module"></script>
 <title>Sign In | CHEF HOME</title>
 
 <style>
@@ -19,109 +18,114 @@
         -webkit-tap-highlight-color: transparent;
     }
   body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #0E0E0E;
-    font-family: "lexend", sans-serif;
-    color: #3E3E3E;
-    position: relative;
-    overflow-x: hidden;
-  }
+        position: relative;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: "lexend", sans-serif;
+        background-color: rgb(228, 228, 228);
+        color: #F5F5F5;
+        overflow-x: hidden;
+    }
 
-  body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.2;
-    filter: brightness(75%);
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .container {
-    background: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(12px);
+    body::before {
+  content: "";
+  position: fixed;
+  bottom: -120px;  /* pushes glow slightly below */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 450px;
+  height: 450px;
+  background-color: rgb(234, 234, 234);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+      .container {
     border-radius: 30px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    padding: 40px 50px;
-    width: 360px;
-    max-width: 90%;
-    text-align: center;
-    border: 1px solid #99730025;
+    padding: 50px 60px;
+    width: 500px;
+    max-width: 95%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.012);
+    backdrop-filter: blur(90px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    box-shadow: inset 0 0 2px rgb(255, 255, 255), 0 8px 32px #771cff1a;
+    border: 1px solid #ffffff00;
     box-sizing: border-box;
-  }
+}
 
   h1 {
     font-family: "milker";
-    color: #C49B66;
-    font-size: 32px;
-    margin-bottom: 20px;
+    color: #771cff;
+    font-size: 40px;
+    margin-bottom: 10px;
   }
 
   input {
-    width: 100%;
+    width: 400px;
     padding: 12px;
     margin: 8px 0;
     border: 1px;
-    border-radius: 25px;
+    border-radius: 15px;
     font-size: 15px;
     outline: none;
     text-align: center;
     background-color: rgba(0, 0, 0, 0);
-    color: #ffffff;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    color: black;
+    box-shadow: 0 3px 10px #771cff1a;
     transition: 0.3s ease-in-out;
+    font-family: "lexend";
   }
 
   input:focus {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 15px #771cff35;
+    font-family: "lexend";
   }
 
   input::placeholder {
-    color: #ffffff;
+    color: rgba(0, 0, 0, 0.443);
+    font-family: "lexend";
   }
-
   .signin-btn {
     width: 100%;
     padding: 12px;
     margin-top: 12px;
     border: none;
-    border-radius: 25px;
-    background-color: #C49B66;
+    border-radius: 15px;
+    background-color: #771cff;
     color: white;
     font-size: 16px;
     cursor: pointer;
     box-shadow: 0 5px 20px rgba(196, 155, 102, 0.3);
     transition: all 0.3s ease-in-out;
+    font-family: "lexend";
   }
 
   .signin-btn:hover {
-    background-color: #E7D4B5;
-    color: #3E3E3E;
+    background-color: #5d16c7;
+    color: #FFFFFF;
     transform: translateY(-3px);
+    font-family: "lexend";
   }
 
   .divider {
-    margin: 20px 0;
     font-size: 13px;
-    color: #7D7D7D;
+    color: #771cff;
   }
 
   .social-buttons {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 300px;
   }
 
   .social-btn {
@@ -131,16 +135,16 @@
     gap: 10px;
     padding: 10px;
     border-radius: 25px;
-    border: 1px solid rgba(196, 155, 102, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     font-size: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(196, 155, 102, 0.15);
   }
 
   .google {
     background-color: #FFFFFF;
     color: #3E3E3E;
+    font-family: "lexend";
   }
 
   .google img {
@@ -150,6 +154,7 @@
   .apple {
     background-color: #3E3E3E;
     color: #FFFFFF;
+    font-family: "lexend";
   }
 
   .apple img {
@@ -157,7 +162,7 @@
     filter: invert(1);
   }
 
-  .google:hover { background-color: #F0E8DC; }
+  .google:hover { background-color: white; }
   .apple:hover { background-color: #5A5A5A; }
 
   p {
@@ -167,14 +172,14 @@
   }
 
   a {
-    color: #C49B66;
+    color: #771cff;
     text-decoration: none;
     font-weight: 500;
   }
 
   a:hover {
     text-decoration: underline;
-    color: #E7D4B5;
+    color: #5414b3;
   }
 
   /* ========== RESPONSIVE STYLES ========== */
@@ -200,8 +205,8 @@
 </style>
 </head>
 <body>
-
-  <div class="container">
+<main>
+    <div class="container">
     <h1>CHEF HOME</h1>
     <form id="signinForm">
       <input type="email" id="email" placeholder="Email" required>
@@ -217,12 +222,60 @@
       </button>
 
       <button class="social-btn apple" id="appleLogin">
-        <img src="https://www.svgrepo.com/show/349446/apple.svg" alt="Apple"> Sign in with Apple
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/apple.svg" alt="Apple">Sign in with Apple
       </button>
     </div>
 
     <p>Don’t have an account? <a href="signup.html">Sign up</a></p>
   </div>
+</main>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup 
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+  import { customerLogin } from "./main.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDv-jV2uHrp8Xchmr3u540J6xmWK8PZEec",
+    authDomain: "login-c2893.firebaseapp.com",
+    projectId: "login-c2893",
+    storageBucket: "login-c2893.appspot.com",
+    messagingSenderId: "848550093693",
+    appId: "1:848550093693:web:b1142db0e0aa38f8afe214",
+    measurementId: "G-KB4XZT429X"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  document.getElementById("google-l").addEventListener("click", () => {
+    signInWithPopup(auth, provider)
+      .then(result => console.log("Google Login Success:", result))
+      .catch(err => console.error("GOOGLE LOGIN ERROR:", err));
+  });
+
+  document.getElementById("signinForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email || !password) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    customerLogin(email, password); 
+  });
+</script>
+
 
 </body>
 </html>
+
+
