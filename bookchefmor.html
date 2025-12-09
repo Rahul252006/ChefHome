@@ -188,7 +188,7 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
-    background: rgba(255, 255, 255, 0.012);
+    background: rgba(255, 255, 255, 0.183);
     backdrop-filter: blur(90px) saturate(150%);
     -webkit-backdrop-filter: blur(30px) saturate(150%);
     box-shadow: inset 0 0 2px rgb(255, 255, 255), 0 8px 32px #771cff1a;
@@ -254,6 +254,7 @@
         outline: none;
         transition: 0.3s all ease;
         margin-top: 5px;
+        font-family: "lexend";
     }
 
     input:focus, select:focus {
@@ -535,11 +536,16 @@
         .container {
             width: 90%;
             padding: 20px;
+            height: 800px;
+            margin-bottom: 50px;
+        }
+        header{
+          width: 320px;
         }
         header h1 { font-size: 24px; }
         h2 { font-size: 18px; }
         .row { flex-direction: column; gap: 15px; }
-        .next { width: 100%; height: 45px; font-size: 16px; margin-left: 0; }
+        .next { width: 115px; height: 45px; font-size: 16px; margin-left: 210px; }
         .dropdown {
         right: 20px;
         width: 150px;
@@ -618,7 +624,7 @@
 <main>
     <div class="container">
         <h2>Personal Details</h2>
-        <form id="signinForm">
+        <form id="signinForm" novalidate>
             <div class="row">
                 <div class="inputBox">
                     <label for="name">Your Name</label>
@@ -627,14 +633,14 @@
                 <div class="inputBox">
                     <label for="phone">Phone Number</label>
                     <input type="tel" id="phone" placeholder="Enter Phone Number" maxlength="10" required>
-                    <button id="getOtpBtn" disabled>Get OTP</button>
+                    <button id="getOtpBtn" type="button" disabled>Get OTP</button>
 
                     <div id="otpSection" style="display:none; margin-top:10px;">
-                        <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" required>
-                        <button id="verifyOtpBtn">Verify OTP</button>
+                        <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6">
+                        <button id="verifyOtpBtn" type="button">Verify OTP</button>
                         <p id="otpMsg" style="color:yellow;"></p>
-                        <button id="resendBtn" style="display:none;">Resend OTP</button>
-                </div>
+                        <button id="resendBtn" type="button" style="display:none;">Resend OTP</button>
+                    </div>
                 </div>
 
             </div>
@@ -699,7 +705,7 @@
                     <input type="text" id="address" placeholder="Enter full address" required>
                 </div>
             </div>
-            <button class="next" >
+            <button class="next" id="nextBtn" type="button">
                 Next
                 <div class="icon">
                     <svg
@@ -723,17 +729,18 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ✅ Existing menu + loader code (untouched)
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loader-screen");
+    if (loader) {
+      loader.style.opacity = "0";
+      loader.style.transition = "0.5s";
+      setTimeout(() => (loader.style.display = "none"), 500);
+    }
+  });
+
   const checkbox = document.getElementById("checkbox");
   const toggleBtn = document.querySelector(".toggle");
   const dropdown = document.getElementById("menuDropdown");
-
-  window.addEventListener("load", () => {
-    const loader = document.getElementById("loader-screen");
-    loader.style.opacity = "0";
-    loader.style.transition = "0.5s";
-    setTimeout(() => loader.style.display = "none", 500);
-  });
 
   function openMenu() {
     dropdown.style.display = "flex";
@@ -742,112 +749,120 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function closeMenu() {
     dropdown.style.animation = "dropdownClose 0.25s forwards";
-    setTimeout(() => dropdown.style.display = "none", 230);
+    setTimeout(() => (dropdown.style.display = "none"), 230);
   }
 
-  toggleBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    checkbox.checked = !checkbox.checked;
-    checkbox.checked ? openMenu() : closeMenu();
-  });
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      checkbox.checked = !checkbox.checked;
+      checkbox.checked ? openMenu() : closeMenu();
+    });
+  }
 
   document.addEventListener("click", (e) => {
-    if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
-      checkbox.checked = false;
+    if (toggleBtn && !toggleBtn.contains(e.target) &&
+        dropdown && !dropdown.contains(e.target)) {
+      if (checkbox) checkbox.checked = false;
       closeMenu();
     }
   });
 
-  // ✅ OTP Logic Starts Here
-  const phoneInput = document.getElementById("phone");
-  const getOtpBtn = document.getElementById("getOtpBtn");
-  const otpSection = document.getElementById("otpSection");
-  const otpInput = document.getElementById("otpInput");
-  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-  const otpMsg = document.getElementById("otpMsg");
-  const resendBtn = document.getElementById("resendBtn");
+  const nameEl = document.getElementById("name");
+  const phoneEl = document.getElementById("phone");
+  const stateEl = document.getElementById("state");
+  const districtEl = document.getElementById("district");
+  const cityEl = document.getElementById("city");
+  const addressEl = document.getElementById("address");
+
   const nextBtn = document.getElementById("nextBtn");
 
-  let generatedOTP = "";
-  let isOtpVerified = false;
-
-  // Enable Get OTP only if phone number is 10 digits
-  phoneInput.addEventListener("input", () => {
-    getOtpBtn.disabled = phoneInput.value.length === 10 ? false : true;
-  });
-
-  // Generate OTP
-  getOtpBtn.addEventListener("click", () => {
-    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log("OTP Sent:", generatedOTP);
-    otpSection.style.display = "block";
-    otpMsg.style.color = "#373737";
-    otpMsg.innerText = "✅ OTP Sent to your phone!";
-    resendBtn.style.display = "none";
-    nextBtn.disabled = true;
-  });
-
-  // Verify OTP
-  verifyOtpBtn.addEventListener("click", () => {
-    if (otpInput.value === generatedOTP) {
-      isOtpVerified = true;
-      otpMsg.style.color = "373737";
-      otpMsg.innerText = "✅ OTP Verified Successfully!";
-      nextBtn.disabled = false; // Only now Next is enabled
-    } else {
-      isOtpVerified = false;
-      otpMsg.style.color = "373737";
-      otpMsg.innerText = "❌ Wrong OTP! Try again.";
-      resendBtn.style.display = "inline-block";
-      nextBtn.disabled = true;
+  cityEl.addEventListener("input", () => {
+    let v = cityEl.value.toLowerCase();
+    if (v.length > 0) {
+      cityEl.value = v.charAt(0).toUpperCase() + v.slice(1);
     }
   });
 
-  // Resend OTP
-  resendBtn.addEventListener("click", () => {
-    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log("Resent OTP:", generatedOTP);
-    otpMsg.style.color = "373737";
-    otpMsg.innerText = "OTP Resent! Check again.";
-    nextBtn.disabled = true;
-  });
+  function setInvalid(el) {
+    if (!el) return;
+    el.style.border = "2px solid red";
+  }
 
-  // ✅ Modified Next button logic (Only works if OTP is verified + all required fields filled)
+  function clearInvalid(el) {
+    if (!el) return;
+    el.style.border = "1px solid rgba(255,255,255,0.2)";
+  }
+
   nextBtn.addEventListener("click", (e) => {
-    const inputs = document.querySelectorAll("input[required]");
-    let allFilled = true;
+    e.preventDefault();
 
-    inputs.forEach(input => {
-      if (input.value.trim() === "") {
-        allFilled = false;
-        input.style.border = "2px solid red";
-      } else {
-        input.style.border = "1px solid rgba(255,255,255,0.2)";
-      }
-    });
+    const name = nameEl.value.trim();
+    const phone = phoneEl.value.trim();
+    const state = stateEl.value.trim();
+    const district = districtEl.value.trim();
+    const cityDisplay = cityEl.value.trim();
+    const address = addressEl.value.trim();
 
-    if (!allFilled) {
-      alert("⚠ Please fill all fields before proceeding!");
+    let ok = true;
+
+    if (!name) { setInvalid(nameEl); ok = false; } else clearInvalid(nameEl);
+    if (!/^\d{10}$/.test(phone)) { setInvalid(phoneEl); ok = false; } else clearInvalid(phoneEl);
+    if (!state) { setInvalid(stateEl); ok = false; } else clearInvalid(stateEl);
+    if (!district) { setInvalid(districtEl); ok = false; } else clearInvalid(districtEl);
+    if (!cityDisplay) { setInvalid(cityEl); ok = false; } else clearInvalid(cityEl);
+    if (!address) { setInvalid(addressEl); ok = false; } else clearInvalid(addressEl);
+
+    if (!ok) {
+      alert("⚠ Please fill all required fields correctly.");
       return;
     }
 
-    if (!isOtpVerified) {
-      alert("⚠ Please verify OTP to continue!");
-      return;
+    const cityLower = cityDisplay.toLowerCase();
+    const districtLower = district.toLowerCase();
+
+    const userData = {
+      name,
+      phone,
+      state,
+      district,
+      city_display: cityDisplay,
+      city: cityLower,
+      address
+    };
+
+    try {
+      localStorage.setItem("userProfile", JSON.stringify(userData));
+      localStorage.setItem("userName", name);
+      localStorage.setItem("userPhone", phone);
+      localStorage.setItem("userState", state);
+      localStorage.setItem("userDistrict", district);
+      localStorage.setItem("userDistrictLower", districtLower);
+      localStorage.setItem("userCityDisplay", cityDisplay);
+      localStorage.setItem("userCity", cityLower);
+      localStorage.setItem("userAddress", address);
+
+      // ADDED → Used in Step 3 bookings
+      localStorage.setItem("userArea", districtLower);
+
+    } catch (err) {
+      console.warn("localStorage error:", err);
     }
 
-    window.location.href = "step2.html"; // ✅ Finally allow navigation
+    window.location.href = "step2.html";
   });
 
-  // Remove red border on typing
-  document.querySelectorAll("input").forEach(input => {
-    input.addEventListener("input", () => {
-      input.style.border = "1px solid rgba(255,255,255,0.2)";
+  [nameEl, phoneEl, districtEl, cityEl, addressEl, stateEl].forEach(el => {
+    if (!el) return;
+    el.addEventListener("input", () => {
+      clearInvalid(el);
     });
   });
 
 });
 </script>
+
 </body>
 </html>
+
