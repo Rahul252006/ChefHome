@@ -1,287 +1,796 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Chef Dashboard | CHEF HOME</title>
-
   <style>
-    @font-face { font-family: "milker"; src: url("fonts/Milker.otf"); }
-    @font-face { font-family: "lexend"; src: url("fonts/Lexend-VariableFont_wght.ttf"); }
-    @font-face { font-family: "flowmery"; src: url("fonts/Flowmery-Regular.ttf"); }
-
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body { font-family:"lexend"; background:#0E0E0E; color:#F5F5F5; min-height:100vh; }
-
+    /* Core styling (kept compact) */
+    @font-face { font-family:"milker"; src:url("fonts/Milker.otf"); }
+    @font-face { font-family:"lexend"; src:url("fonts/Lexend-VariableFont_wght.ttf"); }
+    *{
+      font-family: "lexend";
+    }
+    body {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: "lexend", sans-serif;
+      background-color: rgb(228, 228, 228);
+      color: #F5F5F5;
+      overflow-x: hidden;
+    }
+    .leave-overlay { display:none; position:fixed; inset:0; background:rgba(228,228,228,0.311); align-items:center; justify-content:center; z-index:9999; }
     body::before {
-      content:"";
-      position:fixed; inset:0;
-      background:url("—Slidesdocs—gleaming abstract in golden waves_203f90ae1c.jpg") center/cover no-repeat;
-      opacity:0.35; z-index:-1;
+      content: "";
+      position: fixed;
+      bottom: -120px;  /* pushes glow slightly below */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 450px;
+      height: 450px;
+      background-color: rgb(234, 234, 234);
+      z-index: -1;
+      pointer-events: none;
+      border-radius: 50%;
+      opacity: 0.8;
     }
-
     header {
-      position:fixed; top:20px; left:20px; right:20px; display:flex;
-      justify-content:space-between; align-items:center; padding:15px 35px;
-      background:rgba(30,30,30,0.25); backdrop-filter:blur(20px); border-radius:50px;
-      border:1px solid rgba(214,196,140,0.15); z-index:999;
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      height: 50px;
+      max-width: 1400px;
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(30, 30, 30, 0);
+      backdrop-filter: blur(60px) saturate(150%);
+      -webkit-backdrop-filter: blur(10px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0);
+      border-radius: 40px;
+      box-shadow: inset 0 0 5px rgb(255, 255, 255),
+        0 8px 32px rgba(0, 0, 0, 0.018);
+      z-index: 100;
+      transition: 0.3s ease;
     }
-    header h1 { font-family:"milker"; color:#D6C48C; font-size:28px; }
-
-    .btn { padding:10px 14px; border-radius:12px; border:1px solid rgba(214,196,140,0.12); background: rgba(214,196,140,0.06); color:#D6C48C; cursor:pointer; font-weight:600;
-    transition: all 0.3s ease-in-out; }
-    .btn:hover{ transform: translateY(-2px); }
-
-    main { padding:120px 40px 40px; display:flex; gap:30px; flex-wrap:wrap; justify-content:center; }
-
-    .col-left { 
-        width:320px; 
-        display:flex; 
-        flex-direction:column; 
-        gap:20px; 
-        
+    header h1 {
+      font-family: "milker";
+      color: #771cff;
+      font-size: 32px;
+      margin: 0;
+      padding-top: 5px;
+      letter-spacing: 1px;
     }
-    .col-right { flex:1; min-width:320px; max-width:980px; display:flex; flex-direction:column; gap:20px; }
+    .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(214,196,140,.12);background:rgba(214,196,140,.06);color:#771cff;cursor:pointer}
+    main{padding:100px 20px 32px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+    .card{background:rgba(20,20,20,.45);padding:16px;border-radius:16px;border:1px solid rgba(214,196,140,.08);min-width:260px}
+    .col-left{width:320px;display:flex;flex-direction:column;gap:12px}
+    .col-right{flex:1;min-width:320px;max-width:980px;display:flex;flex-direction:column;gap:12px}
+    .avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,#771cff,#B88F4D);display:flex;align-items:center;justify-content:center;font-weight:700;color:#0E0E0E}
+    .section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .bookings-list{display:flex;flex-direction:column;gap:8px}
 
-    .card { 
-        border-radius:20px;  
-        padding:18px; 
-        background: rgba(30, 30, 30, 0.4);
-        backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
-        box-shadow: inset 0 0 15px rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.4), 0 0 30px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(214,196,140,0.2);
-        box-sizing: border-box;
+    /* Onboarding Modal */
+    .onboard-overlay{
+      margin-top: 10px;
+      position:fixed;
+      inset:0;
+      background:rgba(228, 228, 228, 0.311);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      font-family: "lexend";
+      overflow-y: auto;
+    }
+    .we{
+      font-family: "lexend";
+    }
+    .onboard-modal{
+      padding:18px;
+      margin-top: 30px; /* pushes modal down below header */
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+      border-radius: 30px;
+      width: 850px;
+      max-width: 95%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      background: rgba(255, 255, 255, 0.746);
+      backdrop-filter: blur(90px) saturate(150%);
+      -webkit-backdrop-filter: blur(30px) saturate(150%);
+      box-shadow: inset 0 0 2px rgb(255, 255, 255), 0 8px 32px #771cff1a;
+      border: 1px solid #ffffff00;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .onboard-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .field label{
+      font-size:15px;
+      color:black;
+      margin-bottom:6px;
+      font-weight: bold;
+    }
+    .field input,.field select,.field textarea{width:100%;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);color:black;margin-top: 10px;font-family: "lexend";}
+    input:focus, select:focus, textarea:focus {
+      outline: none !important;
+      box-shadow: none !important;
+      border: 1px solid rgba(56, 56, 56, 0.373) !important; /* your normal border */
+    }
+    .slots-list{max-height:180px;overflow:auto;margin-top:8px;display:flex;flex-direction:column;gap:6px}
+    .slot-row{display:flex;gap:8px;align-items:center}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px;border-radius:10px;background:rgba(214,196,140,.06);border:1px solid rgba(214,196,140,.06);color:#771cff;cursor:pointer}
+    .onboard-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+    @media (max-width:820px){.onboard-grid{grid-template-columns:1fr}.col-left{width:100%}}
+    .booking-row { display:flex; gap:12px; align-items:center; justify-content:space-between; padding:8px; border-radius:8px; background:rgba(255,255,255,0.02); }
+    .booking-info { display:flex; flex-direction:column; gap:4px; color:#E8E8E8; }
+    .badge { padding:4px 8px; border-radius:8px; font-weight:700; color:#0E0E0E; background:#771cff; }
+    .status-pending { background: #771cff; color: #0E0E0E; }
+    .status-accepted { background: #6bbf59; color: #0E0E0E; }
+    .status-rejected { background: #ff7b7b; color: #0E0E0E; }
+    .booking-actions button { margin-left:6px; }
+
+    /* LEAVE / BREAK POPUP */
+    .leave-modal{
+      padding:22px;
+      border-radius:18px;
+      width:380px;
+      max-width:95%;
+      background: rgba(255,255,255,0.95);
+      color: #0e0e0e;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      border: 1px solid rgba(0,0,0,0.06);
+      position: relative;
     }
 
-    .profile { display:flex; gap:12px; align-items:center; }
-    .avatar { width:72px; height:72px; border-radius:14px; background: linear-gradient(180deg,#D6C48C,#B88F4D); display:flex; align-items:center; justify-content:center; color:#0E0E0E; font-weight:700; font-size:22px; }
-    .meta .name { font-family:"milker"; color:#D6C48C; font-size:18px; margin-bottom:4px; margin-top: 0px;}
-    .meta .role { font-size:13px; color:#E8E8E8; }
+    /* Modal behavior CSS additions (opened/closed animations, close button) */
+    /* BACKDROP BLUR WHEN ACTIVE */
+    .onboard-overlay.active,
+    .leave-overlay.active {
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.35) !important;
+    }
 
-    .stats { display:flex; gap:12px; margin-top:12px; }
-    .stat { flex:1; padding:12px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); text-align:center; }
-    .stat .num { font-family:"milker"; color:#D6C48C; font-size:20px; }
-    .stat .label { font-size:12px; color:#E8E8E8; margin-top:6px; }
+    /* OPEN ANIMATION (applied when showing modal) */
+    .modal-anim {
+      opacity: 0;
+      transform: translateY(-30px);
+      animation: modalOpen 0.30s ease forwards;
+    }
 
-    .notifications { max-height:220px; overflow:auto; display:flex; flex-direction:column; gap:8px; margin-top:6px; }
-    .notif { padding:10px; border-radius:12px; background:rgba(0,0,0,0.25); border:1px solid rgba(214,196,140,0.06); color:#EDEDEB; }
+    @keyframes modalOpen {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-    .section-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-    .section-title h2 { font-family:"milker"; color:#D6C48C; margin:0; font-size:20px; }
+    /* CLOSE ANIMATION (applied before hiding modal) */
+    .modal-close-anim {
+      animation: modalClose 0.28s ease forwards;
+    }
 
-    .bookings-list { display:flex; flex-direction:column; gap:10px; }
-    .booking { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:12px; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.04); }
-    .booking .amount { font-family:"milker"; color:#D6C48C; font-size:16px; }
-    .quick-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
-    .quick { flex:1; min-width:160px; padding:12px; border-radius:12px; background: rgba(30,30,30,0.25); border:1px solid rgba(255,255,255,0.04); text-align:center; }
-    .quick .big { font-family:"milker"; color:#D6C48C; font-size:20px; }
+    @keyframes modalClose {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+    }
 
-    @media (max-width:1000px){ main{padding-top:100px;} .col-left{width:100%; order:2;} .col-right{order:1;} }
+    /* X BUTTON */
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #771cff;
+      cursor: pointer;
+      user-select: none;
+      z-index: 20;
+      transition: 0.2s ease;
+    }
+
+    .modal-close:hover {
+      transform: scale(1.15);
+      color: #4e0eb6;
+    }
   </style>
 </head>
 <body>
+  <header>
+    <h1>CHEF HOME</h1>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div id="chefLocalTime" style="font-size:13px;color:#BDBDBD"></div>
+      <button id="applyLeaveBtn" class="btn">Apply Leave / Break</button>
+      <button id="editProfileBtn" class="btn">Edit Profile</button>
+      <button id="logoutBtn" class="btn">Logout</button>
+    </div>
+  </header>
 
-<header>
-  <h1>CHEF HOME</h1>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <span id="chefLocalTime" style="font-size:13px;color:#BDBDBD;"></span>
-    <button id="logoutBtn" class="btn">Logout</button>
-  </div>
-</header>
-
-<main>
-  <div class="col-left">
-    <div class="card" id="profileCard">
-      <div class="profile">
-        <div class="avatar" id="avatarInitial">C</div>
-        <div class="meta">
-          <div class="name" id="chefName">Chef Name</div>
-          <div class="role">Chef • <span id="chefEmail">chef@example.com</span></div>
-          <div style="margin-top:8px;"><button class="btn" id="editProfileBtn">Edit Profile</button></div>
+  <main>
+    <div class="col-left">
+      <div class="card" id="profileCard">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="avatar" id="avatarInitial">C</div>
+          <div>
+            <div style="font-family:milker;color:#771cff;font-size:16px" id="chefName">Chef</div>
+            <div style="font-size:13px;color:#E8E8E8">Chef • <span id="chefEmail">chef@example.com</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px">
+          <div style="flex:1;background:rgba(255,255,255,.02);padding:10px;border-radius:8px;text-align:center">
+            <div style="font-family:milker;color:#771cff" id="earningsTotal">₹0</div><div style="font-size:12px;color:#E8E8E8">Earnings</div></div>
+          <div style="flex:1;background:rgba(255,255,255,.02);padding:10px;border-radius:8px;text-align:center">
+            <div style="font-family:milker;color:#771cff" id="ratingAvg">0.0</div><div style="font-size:12px;color:#E8E8E8">Rating</div></div>
         </div>
       </div>
-      <div class="stats">
-        <div class="stat"><div class="num" id="earningsTotal">₹0</div><div class="label">Earnings</div></div>
-        <div class="stat"><div class="num" id="ratingAvg">0.0</div><div class="label">Rating</div></div>
-        <div class="stat"><div class="num" id="upcomingCount">0</div><div class="label">Upcoming</div></div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700;color:#771cff">Notifications</div>
+          <button class="btn" id="markAllRead">Mark all read</button>
+        </div>
+        <div id="notificationsList" style="margin-top:8px">No notifications</div>
       </div>
     </div>
 
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div style="font-weight:700; color:#D6C48C">Notifications</div>
-        <button class="btn" id="markAllRead">Mark all read</button>
+    <div class="col-right">
+      <div class="card">
+        <div class="section-title">
+          <h3 style="font-family:milker;color:#771cff">Today's Bookings</h3>
+          <button class="btn" id="refreshBtn">Refresh</button>
+        </div>
+        <div class="bookings-list" id="todayBookings"></div>
       </div>
-      <div class="notifications" id="notificationsList">
-        No notifications
+
+      <div class="card">
+        <div class="section-title"><h3 style="font-family:milker;color:#771cff">Upcoming Bookings</h3><button class="btn" id="viewAllBookings">View All</button></div>
+        <div class="bookings-list" id="upcomingBookings"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ONBOARDING MODAL -->
+  <div id="onboardOverlay" class="onboard-overlay" aria-modal="true" role="dialog">
+    <div class="onboard-modal">
+      <span class="modal-close" id="closeOnboard">×</span>
+
+      <h2 style="font-family:milker;color:#771cff;margin-bottom:3px;margin-top: 10px;">Complete your chef profile</h2>
+
+      <div class="onboard-grid" style="margin-top:12px">
+        <!-- Basic info -->
+        <div class="field">
+          <label>Full name</label>
+          <input id="on_name" type="text" placeholder="Full name" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input id="on_email" type="email" placeholder="Email" />
+        </div>
+
+        <div class="field">
+          <label>Phone number</label>
+          <input id="on_phone" type="tel" placeholder="Phone number" />
+        </div>
+        <div class="field">
+          <label>State</label>
+          <input id="on_state" type="text" placeholder="State" />
+        </div>
+
+        <div class="field">
+          <label>City</label>
+          <input id="on_city" type="text" placeholder="City" />
+        </div>
+        <div class="field">
+          <label>Area</label>
+          <input id="on_area" type="text" placeholder="Area" />
+        </div>
+
+        <div class="field" style="grid-column:1 / -1">
+          <label>Full Address</label>
+          <input id="on_address" type="text" placeholder="Door no, landmark, street" />
+        </div>
+
+        <div class="field">
+          <label>Experience (years)</label>
+          <input id="on_experience" type="number" min="0" placeholder="e.g. 3" />
+        </div>
+        <div class="field">
+          <label>Specialization</label>
+          <select id="on_specialization">
+            <option value="both">Both</option>
+            <option value="veg">Veg</option>
+            <option value="nonveg">Non-Veg</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Profile picture (optional)</label>
+          <input id="on_profilePic" type="file" accept="image/*" />
+        </div>
+        <div class="field">
+          <label>Notification consent</label>
+          <select id="on_notify">
+            <option value="both">Email & SMS</option>
+            <option value="email">Email only</option>
+            <option value="sms">SMS only</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+      </div> <!-- onboard-grid closed -->
+
+      <div class="onboard-actions">
+        <button id="onboardSave" class="btn" type="button">Save & Continue</button>
       </div>
     </div>
   </div>
 
-  <div class="col-right">
-    <div class="card" id="todayCard">
-      <div class="section-title">
-        <h2>Today's Bookings</h2>
-        <button class="btn" id="refreshBtn">Refresh</button>
-      </div>
-      <div class="bookings-list" id="todayBookings"></div>
-      <div class="quick-row">
-        <div class="quick"><div class="big" id="todayCount">0</div><p>Today</p></div>
-        <div class="quick"><div class="big" id="weekCount">0</div><p>This Week</p></div>
-        <div class="quick"><div class="big" id="monthEarnings">₹0</div><p>This Month</p></div>
-      </div>
-    </div>
+  <!-- LEAVE / BREAK POPUP -->
+  <div id="leaveOverlay" class="leave-overlay" style="display:none;">
+    <div class="leave-modal">
+      <span class="modal-close" id="closeLeave">×</span>
 
-    <div class="card" id="upcomingCard">
-      <div class="section-title">
-        <h2>Upcoming Bookings</h2>
-        <button class="btn" id="viewAllBookings">View All</button>
-      </div>
-      <div class="bookings-list" id="upcomingBookings"></div>
-    </div>
+      <h2>Apply Leave / Break</h2>
 
-    <div class="card" id="reviewsCard">
-      <div class="section-title"><h2>Ratings & Reviews</h2></div>
-      <div id="reviewsList">No reviews yet.</div>
+      <label style="color:black; font-weight:bold;">Select type</label>
+      <select id="leaveType" style="margin-top:8px; margin-bottom:15px;">
+        <option value="leave">Full Day Leave</option>
+        <option value="break">Short Break</option>
+      </select>
+
+      <div id="breakFields" style="display:none;">
+        <label style="color:black; font-weight:bold;">Break Start</label>
+        <input id="breakStart" type="time" style="margin-bottom:15px;">
+
+        <label style="color:black; font-weight:bold;">Break End</label>
+        <input id="breakEnd" type="time">
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button id="submitLeaveBtn" class="btn">Submit</button>
+      </div>
+
     </div>
   </div>
-</main>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, onChildAdded } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  <!-- Firebase SDK modules -->
+  <script type="module">
+    /* ---------------------------------------------
+       IMPORTS
+    ---------------------------------------------- */
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      Timestamp,
+      collection,
+      getDocs,
+      query,
+      where,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import {
+      getStorage,
+      ref as sref,
+      uploadBytes,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+    import {
+      getDatabase,
+      ref as dbref,
+      onChildAdded
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDv-jV2uHrp8Xchmr3u540J6xmWK8PZEec",
-  authDomain: "login-c2893.firebaseapp.com",
-  projectId: "login-c2893",
-  storageBucket: "login-c2893.firebasestorage.app",
-  messagingSenderId: "848550093693",
-  appId: "1:848550093693:web:b1142db0e0aa38f8afe214",
-  measurementId: "G-KB4XZT429X"
-};
+    /* ---------------------------------------------
+       FIREBASE CONFIG
+    ---------------------------------------------- */
+    const firebaseConfig = {
+      apiKey: "AIzaSyDv-jV2uHrp8Xchmr3u540J6xmWK8PZEec",
+      authDomain: "login-c2893.firebaseapp.com",
+      projectId: "login-c2893",
+      storageBucket: "login-c2893.firebasestorage.app",
+      messagingSenderId: "848550093693",
+      appId: "1:848550093693:web:b1142db0e0aa38f8afe214",
+      measurementId: "G-KB4XZT429X",
+      databaseURL: "https://login-c2893-default-rtdb.firebaseio.com"
+    };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const rtdb = getDatabase(app); // Realtime DB
-const fstore = getFirestore(app); // Firestore
-const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const fstore = getFirestore(app);
+    const storage = getStorage(app);
+    const rtdb = getDatabase(app);
 
-// DOM elements
-const avatarEl = document.getElementById("avatarInitial");
-const chefNameEl = document.getElementById("chefName");
-const chefEmailEl = document.getElementById("chefEmail");
-const earningsTotalEl = document.getElementById("earningsTotal");
-const ratingAvgEl = document.getElementById("ratingAvg");
-const upcomingCountEl = document.getElementById("upcomingCount");
-const notificationsListEl = document.getElementById("notificationsList");
-const todayBookingsEl = document.getElementById("todayBookings");
-const upcomingBookingsEl = document.getElementById("upcomingBookings");
-const reviewsListEl = document.getElementById("reviewsList");
-const todayCountEl = document.getElementById("todayCount");
-const weekCountEl = document.getElementById("weekCount");
-const monthEarningsEl = document.getElementById("monthEarnings");
-const chefLocalTimeEl = document.getElementById("chefLocalTime");
-const refreshBtn = document.getElementById("refreshBtn");
-const markAllReadBtn = document.getElementById("markAllRead");
-const viewAllBookingsBtn = document.getElementById("viewAllBookings");
-const editProfileBtn = document.getElementById("editProfileBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+    /* ---------------------------------------------
+       DOM ELEMENTS
+    ---------------------------------------------- */
+    const avatarEl = document.getElementById("avatarInitial");
+    const chefNameEl = document.getElementById("chefName");
+    const chefEmailEl = document.getElementById("chefEmail");
+    const earningsTotalEl = document.getElementById("earningsTotal");
+    const ratingAvgEl = document.getElementById("ratingAvg");
 
-// Placeholder chefId for Realtime DB
-const chefId = "chef1";
+    const onboardOverlay = document.getElementById("onboardOverlay");
+    const on_name = document.getElementById("on_name");
+    const on_email = document.getElementById("on_email");
+    const on_phone = document.getElementById("on_phone");
+    const on_state = document.getElementById("on_state");
+    const on_city = document.getElementById("on_city");
+    const on_area = document.getElementById("on_area");
+    const on_address = document.getElementById("on_address");
+    const on_experience = document.getElementById("on_experience");
+    const on_specialization = document.getElementById("on_specialization");
+    const on_profilePic = document.getElementById("on_profilePic");
+    const on_notify = document.getElementById("on_notify");
+    const onboardSave = document.getElementById("onboardSave");
 
-// ------------------- Realtime DB: Orders Notifications -------------------
-const ordersRef = ref(rtdb,'orders');
-onChildAdded(ordersRef, (snap)=>{
-  const order = snap.val();
-  if(order.chefId===chefId && order.status==="pending"){
-    const notifDiv = document.createElement('div');
-    notifDiv.classList.add('notif');
-    notifDiv.innerHTML = `<strong style="color:#D6C48C">New Order</strong><br/>
-                          ${order.customerName} • ${order.date} ${order.time}`;
-    notificationsListEl.prepend(notifDiv);
+    const todayBookingsEl = document.getElementById("todayBookings");
+    const upcomingBookingsEl = document.getElementById("upcomingBookings");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    const today = new Date().toISOString().split("T")[0];
-    if(order.date===today){
-      const bookingDiv = document.createElement('div');
-      bookingDiv.classList.add('booking');
-      bookingDiv.innerHTML = `<div style="font-weight:700;color:#D6C48C">${order.customerName}</div>
-                              <div style="font-size:13px;color:#E8E8E8">${order.date} ${order.time}</div>
-                              <div class="amount">₹${order.amount||"-"}</div>`;
-      todayBookingsEl.prepend(bookingDiv);
+    const editProfileBtn = document.getElementById("editProfileBtn");
+
+    /* --- Leave / Break Popup --- */
+    const leaveOverlay = document.getElementById("leaveOverlay");
+    const applyLeaveBtn = document.getElementById("applyLeaveBtn");
+    const leaveType = document.getElementById("leaveType");
+    const breakFields = document.getElementById("breakFields");
+    const breakStart = document.getElementById("breakStart");
+    const breakEnd = document.getElementById("breakEnd");
+    const submitLeaveBtn = document.getElementById("submitLeaveBtn");
+
+    let currentUser = null;
+    let loadedBookings = [];
+
+    /* ---------------------------------------------
+       AUTH WATCHER
+    ---------------------------------------------- */
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "signin.html";
+        return;
+      }
+
+      currentUser = user;
+
+      await ensureUserDoc(user);
+      await loadProfile(user);
+      await loadBookings(user);
+    });
+
+    /* ---------------------------------------------
+       CREATE USER DOC IF MISSING
+    ---------------------------------------------- */
+    async function ensureUserDoc(user){
+      const uRef = doc(fstore, "users", user.uid);
+      const snap = await getDoc(uRef);
+
+      if (!snap.exists()) {
+        await setDoc(uRef, {
+          name: user.displayName || "",
+          email: user.email || "",
+          phone: "",
+          state: "",
+          city: "",
+          area: "",
+          address: "",
+          specialization: "both",
+          experience: 0,
+          profilePicUrl: "",
+          notify: "both",
+          about: "",
+          isAvailable: true,
+          onLeave: false,
+          breakSlot: null,
+          createdAt: Timestamp.now()
+        });
+      }
     }
 
-    alert(`New order from ${order.customerName} at ${order.time}`);
-  }
-});
+    /* ---------------------------------------------
+       LOAD PROFILE
+    ---------------------------------------------- */
+    async function loadProfile(user){
+      const snap = await getDoc(doc(fstore, "users", user.uid));
+      const p = snap.data() || {};
 
-// ------------------- Firestore: Handle Chef Login -------------------
-async function handleChefLogin(chefUid) {
-  const chefRef = doc(fstore, "users", chefUid);
-  const chefSnap = await getDoc(chefRef);
+      chefNameEl.textContent = p.name || "Chef";
+      chefEmailEl.textContent = p.email || "chef@example.com";
+      avatarEl.textContent = (p.name || "C")[0].toUpperCase();
 
-  if(chefSnap.exists()) {
-    const chefData = chefSnap.data();
-    if(chefData.available === undefined) {
-      await updateDoc(chefRef, { available: true });
-      console.log("Field 'available' added for chef:", chefUid);
+      earningsTotalEl.textContent = p.earnings ? `₹${p.earnings}` : "₹0";
+      ratingAvgEl.textContent = p.rating ? p.rating.toFixed(1) : "0.0";
     }
-  } else {
-    await setDoc(chefRef, { name: "", email: "", available: true });
-    console.log("New chef document created:", chefUid);
-  }
-}
 
-// ------------------- Auth + Firestore Data -------------------
-onAuthStateChanged(auth, async (user) => {
-  if(user) { 
-    await handleChefLogin(user.uid);  // <-- ensure fields exist
-    await loadChefData(user); 
-  } else { 
-    window.location.href="signin.html"; 
-  }
-});
+    /* ---------------------------------------------
+       EDIT PROFILE POPUP
+    ---------------------------------------------- */
+    editProfileBtn.onclick = async () => {
+      if (!currentUser) return;
+      const snap = await getDoc(doc(fstore, "users", currentUser.uid));
+      openOnboard(snap.data(), currentUser);
+      showOnboardModal();
+    };
 
-async function loadChefData(user){
-  const userDoc = doc(fstore,"users",user.uid);
-  const snap = await getDoc(userDoc);
-  const profile = snap.exists() ? snap.data() : {};
-  chefNameEl.textContent = profile.name || user.displayName || "Chef";
-  chefEmailEl.textContent = profile.email || user.email;
-  avatarEl.textContent = (profile.name ? profile.name[0] : "C").toUpperCase();
+    function openOnboard(p = {}, user){
+      on_name.value = p.name || "";
+      on_email.value = p.email || "";
+      on_phone.value = p.phone || "";
+      on_state.value = p.state || "";
+      on_city.value = p.city || "";
+      on_area.value = p.area || "";
+      on_address.value = p.address || "";
+      on_experience.value = p.experience || "";
+      on_specialization.value = p.specialization || "both";
+      on_notify.value = p.notify || "both";
+    }
 
-  const bookingsSnap = await getDocs(query(
-    collection(fstore,"bookings"),
-    where("chefId","==",user.uid),
-    orderBy("datetime","asc")
-  ));
-  const bookings = [];
-  bookingsSnap.forEach(d=>bookings.push({...d.data(),id:d.id}));
-  renderBookings(bookings);
+    /* ---------------------------------------------
+       SAVE PROFILE
+    ---------------------------------------------- */
+    onboardSave.onclick = async () => {
+      if (!currentUser) return;
 
-  await loadNotifications(user.uid);
-}
+      const uRef = doc(fstore, "users", currentUser.uid);
 
-// ------------------- Render Bookings / Reviews / Notifications -------------------
-// (Keep your existing functions renderBookings, renderBookingsList, renderReviews, loadNotifications here)
-// ... (no change needed) ...
+      // Upload profile picture if selected
+      let profilePicUrl = "";
+      if (on_profilePic.files && on_profilePic.files[0]) {
+        try {
+          const path = `chefProfiles/${currentUser.uid}_${Date.now()}`;
+          const snap = await uploadBytes(sref(storage, path), on_profilePic.files[0]);
+          profilePicUrl = await getDownloadURL(snap.ref);
+        } catch (err) {
+          console.error("Pic upload failed:", err);
+        }
+      }
 
-// ------------------- Logout + Buttons -------------------
-logoutBtn.addEventListener("click", async()=>{ await signOut(auth); window.location.href="signin.html"; });
-refreshBtn.addEventListener("click",()=>onAuthStateChanged(auth,user=>user && loadChefData(user)));
-markAllReadBtn.addEventListener("click",()=>alert("Mark all read functionality here."));
-viewAllBookingsBtn.addEventListener("click",()=>alert("Redirect to all bookings page."));
-editProfileBtn.addEventListener("click",()=>alert("Redirect to edit profile page."));
+      // Final object to save
+      const data = {
+        name: on_name.value.trim(),
+        email: on_email.value.trim(),
+        phone: on_phone.value.trim(),
+        state: on_state.value.trim(),
+        city: on_city.value.trim(),
+        area: on_area.value.trim(),
+        address: on_address.value.trim(),
+        specialization: on_specialization.value,
+        experience: Number(on_experience.value) || 0,
+        notify: on_notify.value,
+        updatedAt: Timestamp.now()
+      };
 
-// ------------------- Clock -------------------
-setInterval(()=>{ chefLocalTimeEl.textContent = new Date().toLocaleString(); },1000);
-</script>
+      // Only add pic url if a picture was uploaded
+      if (profilePicUrl) data.profilePicUrl = profilePicUrl;
 
+      // Save to Firestore
+      await updateDoc(uRef, data);
 
+      // Close with animation
+      closeOnboardModal();
+
+      alert("Profile updated!");
+    };
+
+    /* ---------------------------------------------
+       BOOKINGS FETCH
+    ---------------------------------------------- */
+    async function loadBookings(user){
+      todayBookingsEl.innerHTML = "";
+      upcomingBookingsEl.innerHTML = "";
+
+      const qSnap = await getDocs(
+        query(
+          collection(fstore, "bookings"),
+          where("chefId", "==", user.uid),
+          orderBy("date", "asc")
+        )
+      );
+
+      const bookings = [];
+      qSnap.forEach(doc => bookings.push({ id: doc.id, ...doc.data() }));
+      loadedBookings = bookings;
+
+      renderBookings(bookings);
+    }
+
+    /* ---------------------------------------------
+       RENDER BOOKINGS
+    ---------------------------------------------- */
+    function renderBookings(list){
+      todayBookingsEl.innerHTML = "";
+      upcomingBookingsEl.innerHTML = "";
+
+      const today = new Date();
+      const tStr = `${String(today.getDate()).padStart(2,"0")}-${String(today.getMonth()+1).padStart(2,"0")}-${today.getFullYear()}`;
+
+      const todayList = list.filter(b => b.date === tStr);
+      const upcomingList = list.filter(b => b.date !== tStr);
+
+      if (todayList.length === 0) todayBookingsEl.innerHTML = "<div class='card'>No bookings today</div>";
+      else todayList.forEach(b => todayBookingsEl.appendChild(createBookingNode(b)));
+
+      if (upcomingList.length === 0) upcomingBookingsEl.innerHTML = "<div class='card'>No upcoming bookings</div>";
+      else upcomingList.forEach(b => upcomingBookingsEl.appendChild(createBookingNode(b)));
+    }
+
+    function createBookingNode(b){
+      const row = document.createElement("div");
+      row.className = "booking-row";
+
+      row.innerHTML = `
+        <div class="booking-info">
+          <div style='font-weight:700;color:#771cff'>${b.customerName || "Customer"}</div>
+          <div>${b.date} ${b.time}</div>
+          <div>${b.address || ""} • ${b.city || ""} • ${b.area || ""}</div>
+        </div>
+
+        <div style='display:flex;flex-direction:column;gap:8px;align-items:flex-end'>
+          <div class="badge status-${b.status || "pending"}">
+            ${(b.status || "pending")[0].toUpperCase() + (b.status || "pending").slice(1)}
+          </div>
+        </div>
+      `;
+
+      return row;
+    }
+
+    /* ---------------------------------------------
+       APPLY LEAVE / BREAK (open/close behavior improved)
+    ---------------------------------------------- */
+
+    // Show onboard modal (animated)
+    function showOnboardModal() {
+      const modal = onboardOverlay.querySelector(".onboard-modal");
+      // remove any close animation class in case
+      modal.classList.remove("modal-close-anim");
+      modal.classList.add("modal-anim");
+      onboardOverlay.style.display = "flex";
+      // allow the modalOpen animation to run (it's triggered by the class)
+      // and mark overlay active for backdrop blur
+      requestAnimationFrame(() => {
+        onboardOverlay.classList.add("active");
+      });
+      // remove modal-anim after animation completes to keep DOM clean
+      setTimeout(() => modal.classList.remove("modal-anim"), 350);
+    }
+
+    // Show leave modal (animated)
+    function showLeaveModal() {
+      const modal = leaveOverlay.querySelector(".leave-modal");
+      modal.classList.remove("modal-close-anim");
+      modal.classList.add("modal-anim");
+      leaveOverlay.style.display = "flex";
+      requestAnimationFrame(() => {
+        leaveOverlay.classList.add("active");
+      });
+      setTimeout(() => modal.classList.remove("modal-anim"), 350);
+    }
+
+    // Close onboard modal with close animation
+    function closeOnboardModal() {
+      const modal = onboardOverlay.querySelector(".onboard-modal");
+      // start close animation
+      modal.classList.remove("modal-anim");
+      modal.classList.add("modal-close-anim");
+      // after animation, hide overlay and clean up
+      setTimeout(() => {
+        onboardOverlay.style.display = "none";
+        onboardOverlay.classList.remove("active");
+        modal.classList.remove("modal-close-anim");
+      }, 280); // matches modalClose duration
+    }
+
+    // Close leave modal with close animation
+    function closeLeaveModal() {
+      const modal = leaveOverlay.querySelector(".leave-modal");
+      modal.classList.remove("modal-anim");
+      modal.classList.add("modal-close-anim");
+      setTimeout(() => {
+        leaveOverlay.style.display = "none";
+        leaveOverlay.classList.remove("active");
+        modal.classList.remove("modal-close-anim");
+      }, 280);
+    }
+
+    // Wire up open buttons to the new show functions
+    applyLeaveBtn.onclick = () => {
+      showLeaveModal();
+    };
+
+    // leaveType toggle
+    leaveType.onchange = () => {
+      breakFields.style.display = leaveType.value === "break" ? "block" : "none";
+    };
+
+    // Submit leave - use animated close
+    submitLeaveBtn.onclick = async () => {
+      if (!currentUser) return;
+
+      const uRef = doc(fstore, "users", currentUser.uid);
+
+      if (leaveType.value === "leave") {
+        await updateDoc(uRef, {
+          isAvailable: false,
+          onLeave: true,
+          breakSlot: null,
+          leaveAppliedAt: Timestamp.now()
+        });
+        alert("Full day leave applied!");
+      } else {
+        if (!breakStart.value || !breakEnd.value || breakStart.value >= breakEnd.value) {
+          alert("Invalid break time");
+          return;
+        }
+
+        await updateDoc(uRef, {
+          onLeave: false,
+          isAvailable: true,
+          breakSlot: { start: breakStart.value, end: breakEnd.value },
+          leaveAppliedAt: Timestamp.now()
+        });
+        alert("Break applied!");
+      }
+
+      closeLeaveModal();
+    };
+
+    /* ====== CLOSE BUTTONS ====== */
+    const closeOnboardBtn = document.getElementById("closeOnboard");
+    const closeLeaveBtn = document.getElementById("closeLeave");
+    if (closeOnboardBtn) closeOnboardBtn.onclick = closeOnboardModal;
+    if (closeLeaveBtn) closeLeaveBtn.onclick = closeLeaveModal;
+
+    /* ====== CLICK OUTSIDE TO CLOSE ====== */
+    window.addEventListener("click", (e) => {
+      if (e.target === onboardOverlay) closeOnboardModal();
+      if (e.target === leaveOverlay) closeLeaveModal();
+    });
+
+    /* ---------------------------------------------
+       REFRESH & LOGOUT
+    ---------------------------------------------- */
+    refreshBtn.onclick = async () => {
+      await loadBookings(currentUser);
+      alert("Refreshed!");
+    };
+
+    logoutBtn.onclick = async () => {
+      await signOut(auth);
+      window.location.href = "signin.html";
+    };
+
+  </script>
 </body>
 </html>
+
